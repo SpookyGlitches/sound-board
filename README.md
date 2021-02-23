@@ -61,4 +61,4 @@ node app
 
 ## Contributing
 
-
+Uhm ya, just don't push directly to the main branch. 
