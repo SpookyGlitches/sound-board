@@ -56,7 +56,6 @@ node app
 
 * Error handling
 * Delete voice button 
-* Prevent a playing audio after another button is clicked
 * Delete audio file too if user presses delete category
 
 ## Contributing

@@ -1,20 +1,22 @@
-var button
 var audio = new Audio()
-audio.oncanplay = () => {
-    audio.play()
-    button.innerHTML += `<div class="spinner-grow spinner-grow-sm text-danger" id='spinner' role="status"></div>`
-}
-audio.onended = () => {
-    document.getElementById("spinner").remove()
-}
+
+audio.onended = removeSpinner
+
 document.querySelectorAll(".voice-btn").forEach(btn => btn.addEventListener("click", (event) => {
+    removeSpinner()
     audio.src = "/static/audios/"+btn.value
-    button = btn
+    audio.play()
+    btn.innerHTML += `<div class="spinner-grow spinner-grow-sm text-danger" id='spinner' role="status"></div>`
 }))
 document.querySelectorAll(".category").forEach(div => {
     div.addEventListener("mouseleave",toggleTrash)
     div.addEventListener("mouseenter",toggleTrash)
 })
+
+function removeSpinner(){
+    var spinner = document.getElementById("spinner")
+    if(spinner) spinner.remove()
+}
 
 function toggleTrash(event){
     var trash = event.target.querySelector(".delete-category")
