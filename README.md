@@ -16,7 +16,7 @@ You should have MySQL and Node.JS installed.
 
 * Clone the repository  
     ```
-    git clone 
+    git clone https://github.com/SpookyGlitches/voice-buttons.git
     ```
 
 * Install dependencies by running
