@@ -1,8 +1,10 @@
 # Soundboard
 
+Find, categorize, and play sound clips.
+
 ## Purpose
 
-Find, categorize, and play sound clips.
+For Fun
 
 ## Contributing
 
