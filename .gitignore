@@ -3,3 +3,4 @@
 /node_modules
 db_design.sql
 db_design.drawio
+/documentation/*
