@@ -1,3 +1,51 @@
-<html>
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row min-vh-100">
+            <div class="col bg-dark text-white">
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <div class="">
+                    <h1 class="fw-bolder">Sign in to your account</h1>
+                    <p>It's nice to see you here.</p>
+                    <div class="mt-4">
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-bold">Email addresss</label>
+                            <div class="">
+                                <input type="text" name="email" class="form-control form-control-sm" id="">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-bold">Password</label>
+                            <div class="">
+                                <input type="password" name="password" class="form-control form-control-sm" id="">
+                            </div>
+                        </div>
+                        <div class="d-grid mb-3">
+                            <button class="btn btn-primary" type="submit">Sign in</button>
+                        </div>
+                        <div class="mb-4 d-flex flex-column justify-content-center align-items-center">
+                            <small>
+                                <a href="" >Forgot password?</a>
+                            </small>
+                            <small>
+                                <a href="/">Sign up</a>
+                            </small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<%- include('./partials/cdn') -%>
 </html>
