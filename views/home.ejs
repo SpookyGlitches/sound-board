@@ -25,8 +25,14 @@
                     </div>
                 </div>
                 <div class="col col-sm-10 px-4">
-                    <div class="container py-5">
-                        <%- include ('./partials/soundBoardHeader.ejs') -%>
+                    <div class="container py-4">
+                        <%- include ('./partials/soundBoardHeader.ejs',
+                        {
+                            "exclude":[],
+                            "custom":{
+                                title:"h1"
+                            }
+                        }) -%>
                         <div class="d-grid d-flex justify-content-end gap-2" id='soundBoardOptions'>
                             <button type="button" class="btn btn-primary btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#commentsModal">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-text-fill" viewBox="0 0 16 16">
@@ -51,11 +57,11 @@
                         </div>
                         <div id="soundBoardCategories" class="row mt-3" data-masonry='{"percentPosition":true}'>
                             <% for( let index = 0; index < 15; index++ ) { %>
-                                <div class="round category mb-4 col-sm-4">
+                                <div class="category mb-4 col-sm-4">
                                     <div class="card rounded border" >
                                       <div class="card-body">
                                         <h5 class="card-title fw-bold text-center">
-                                            <a href="" class="text-decoration-none text-dark">
+                                        <a href="/category" class="text-decoration-none text-dark">
                                                 Category Title
                                             </a>
                                         </h5>
@@ -87,17 +93,24 @@
                     </div>
                     <form action="/audio/create-category" method="post">
                         <div class="modal-body">
-                            <label for="" class="form-label fw-bold">
-                                Category
-                                Name
-                            </label>
-                            <input type="text" name="title" class="form-control form-control-sm" id="" placeholder="">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
-                                Close
-                            </button>
-                            <input class="btn btn-primary btn-sm" type="submit" value="Create" />
+                            <div class="mb-3">
+                                <label for="" class="form-label fw-bold">
+                                    Name
+                                </label>
+                                <input type="text" name="title" class="form-control form-control-sm" id="" placeholder="">
+                            </div>
+                            <div class="mb-4">
+                                <label for="" class="form-label fw-bold">
+                                    Description
+                                </label>
+                                <input type="text" name="description" class="form-control form-control-sm" id="" placeholder="">
+                            </div>
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                                <input class="btn btn-primary btn-sm" type="submit" value="Create" />
+                            </div>
                         </div>
                     </form>
                 </div>

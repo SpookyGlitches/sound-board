@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category</title>
+</head>
+
+<body>
+    <%- include('./partials/navbar.ejs') %>
+        <div class="container py-4">
+            <div class="mb-2">
+                <h1 class="fw-bolder">Category Title</h1>
+                <div class="row">
+                    <div class="col-lg-10">
+                        <p>
+                            Insert description here. Insert description here. Insert description here. Insert
+                            description here. Insert description here.
+                        </p>
+                    </div>
+                    <div class="col-lg-2">
+                        <%- include('./partials/dates.ejs')%>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-2" id='soundBoardOptions'>
+                <button type="button" class="btn btn-sm btn-primary d-flex align-items-center" data-bs-toggle="modal"
+                    data-bs-target="#deleteCategoryModal">
+                    Delete category
+                </button>
+
+                <button class="btn btn-primary btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#editCategoryModal">
+                    Edit category
+                </button>
+                <button type="button" class="btn btn-primary btn-sm d-flex align-items-center" data-bs-toggle="modal"
+                    data-bs-target="#addSoundModal">
+                    Add sound
+                </button>
+            </div>
+            <div class="py-4 d-flex justify-content-center flex-column align-items-center">
+                <% for( let index = 0; index < 15; index++ ) { %>
+                    <div class="card border-0 mb-4" style="min-width: 35rem;">
+                      <div class="card-bod">
+                        <div class='border-top border-bottom py-3  text-center'>
+                            <h5 class="card-title fw-bold mb-0">Labedddddddddl</h5>
+                            <h6 class='text-muted mb-1'>
+                                Hello
+                            </h6>
+                            <div class='d-flex gap-2 justify-content-center'>
+                                <button class='btn btn-sm btn-primary'  data-bs-toggle="modal" data-bs-target="#deleteCategoryModal"> 
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                    </svg>
+                                </button>
+                                <button class='btn btn-sm btn-primary' data-bs-toggle="modal" data-bs-target="#addSoundModal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                      </svg>
+                                </button>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class='bg-light mb-2'>
+                        <div class='d-flex pt-3 gap-2 mb-2'>
+                            <button class='btn btn-sm btn-primary'>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            </button>
+                            <button class='btn btn-sm btn-primary'>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                  </svg>
+                            </button>
+                        </div>
+                        <button class='mb-1 btn btn-light sound btn-sm'>Label here </button>
+                        <p class='text-muted'>
+                            <small>
+                                Description here
+                            </small>
+                        </p>
+                    </div> -->
+                    <!-- <div class="d-flex justify-content-center align-items-center mb-3 py-3">
+                        <div class="d-flex flex-column align-items-center border">
+                            <button class='mb-1 btn btn-light sound btn-sm'>Label here </button>
+                            <small class="text-muted">Hello world</small>
+                        </div>
+                    </div> -->
+                <% } %>
+            </div>
+        </div>
+        <div class="modal fade" id="deleteCategoryModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="deleteCategoryModal" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title fw-bolder" id="">Delete category</h3>
+              </div>
+              <div class="modal-body">
+                  <p class='text-center'>
+                      All sounds will be lost. Are you sure you want to delete this category?
+                  </p>
+                  <form action="" class='d-flex gap-2 justify-content-center' method="post">
+                      <button class='btn btn-sm btn-primary' type="submit">Delete</button>
+                      <button class='btn btn-sm btn-primary' aria-label='close' type="button" data-bs-dismiss="modal">Cancel</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="editCategoryModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="editCategoryModal" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title fw-bolder" id="">Edit category</h3>
+              </div>
+              <div class="modal-body">
+                <form action="/audio/create-category" method="post">
+                    <div class="mb-3">
+                        <label for="" class="form-label fw-bold">
+                            Name
+                        </label>
+                        <input type="text" name="title" class="form-control form-control-sm" id="" placeholder="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label fw-bold">
+                            Description
+                        </label>
+                        <input type="text" name="" class="form-control form-control-sm" id="" placeholder="">
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <input class="btn btn-primary btn-sm" type="submit" value="Create" />
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+         <div class="modal fade" id="addSoundModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addSoundModal" aria-hidden="true">
+           <div class="modal-dialog">
+             <div class="modal-content">
+               <div class="modal-header">
+                 <h3 class="modal-title fw-bolder" id="">Add/edit sound</h3>
+               </div>
+               <div class="modal-body">
+                    <form action="" method="post">
+                        <div class="mb-3">
+                            <label for="label" class="form-label fw-bold">Label</label>
+                            <input type="text" name="label" class="form-control form-control-sm" id="" placeholder="">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">Description</label>
+                            <input type="text" name="label" class="form-control form-control-sm" id="" placeholder="">
+                        </div>
+                        <div class="mb-3">
+                            <label for="sound-file" class="form-label fw-bold">Sound file</label>
+                            <input class="form-control form-control-sm" id="" type="file">
+                        </div>
+                        <div class="mb-2 d-flex gap-2 justify-content-end">
+                            <button class="btn btn-primary btn-sm" type="button" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-primary btn-sm" type="submit">Submit</button>
+                        </div>
+                    </form>              
+               </div>
+             </div>
+           </div>
+         </div>
+         
+</body>
+<script>
+    var audio = new Audio()
+    var button
+    document.querySelectorAll(".sound").forEach(btn => btn.addEventListener("click",(event) => {
+        audio.src = "https://www.myinstants.com/media/sounds/miku-miku-uwu.mp3"
+        button = event.target
+    }))
+    audio.oncanplay = () => {
+       audio.play()
+    }
+</script>
+<%- include('./partials/cdn.ejs')%>
+
+</html>

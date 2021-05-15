@@ -14,10 +14,28 @@ app.use(fileUpload());
 
 app.use("/static", express.static("public"));
 
-app.get("/", (req, res) => {
+app.get("/explore", (req, res) => {
 	res.render("explore");
 });
+app.get("/", (req, res) => {
+	res.render("home");
+});
+app.get("/create", (req, res) => {
+	res.render("create");
+});
 
+app.get("/category", (req, res) => {
+	res.render("category");
+});
+app.get("/profile", (req, res) => {
+	res.render("profile");
+});
+app.get("/signin", (req, res) => {
+	res.render("signIn");
+});
+app.get("/signup", (req, res) => {
+	res.render("signUp");
+});
 // const getAudio = async (req, res) => {
 // 	try {
 // 		let [categories] = await connection
