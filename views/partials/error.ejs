@@ -1,0 +1,8 @@
+<% if (message && message.length != 0) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <% for( let index = 0; index < message.length; index++ ) { %>
+            <small class=""><%= message[index].msg %></small>    
+        <% } %>
+        <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>

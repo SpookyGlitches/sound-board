@@ -26,7 +26,6 @@ const saved_board = db.define(
 		is_pinned: {
 			type: DataTypes.BOOLEAN,
 			default: false,
-			allowNull: false,
 		},
 	},
 	{

@@ -9,46 +9,49 @@
 <body>
     <div class="container-fluid">
         <div class="row min-vh-100">
-            <div class="col bg-dark text-white">
+            <div class="col-md bg-dark text-white">
             </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <div class="" style="min-width: 20rem;">
+            <div class="col-md d-flex justify-content-center align-items-center">
+                <div class="" style="max-width: 30rem;">
                     <h1 class="fw-bolder">Create an account</h1>
                     <p>Hey, it's free! 😉</p>
                     <div class="mt-4">
-                        <div class="mb-3">
-                            <label for="email" class="form-label fw-bold">Email addresss</label>
-                            <div class="">
-                                <input type="text" name="email" class="form-control form-control-sm" id="">
+                        <%- include("./partials/error")%>
+
+                        <form action="/auth/signup" method="post">
+                            <div class="mb-3">
+                                <label for="email" class="form-label fw-bold">Email addresss</label>
+                                <div class="">
+                                    <input type="text" name="email_address" class="form-control form-control-sm" id="">
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="displayName" class="form-label fw-bold">Display name</label>
-                            <div class="">
-                                <input type="text" name="displayName" class="form-control form-control-sm" id="">
+                            <div class="mb-3">
+                                <label for="displayName" class="form-label fw-bold">Display name</label>
+                                <div class="">
+                                    <input type="text" name="display_name" class="form-control form-control-sm" id="">
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label fw-bold">Password</label>
-                            <div class="">
-                                <input type="password" name="password" class="form-control form-control-sm" id="">
+                            <div class="mb-3">
+                                <label for="password" class="form-label fw-bold">Password</label>
+                                <div class="">
+                                    <input type="password" name="password" class="form-control form-control-sm" id="">
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-4">
-                            <label for="confirmPassword" class="form-label fw-bold">Confirm Password</label>
-                            <div class="">
-                                <input type="password" name="confirmPassword" class="form-control form-control-sm" id="">
+                            <div class="mb-4">
+                                <label for="confirmPassword" class="form-label fw-bold">Confirm Password</label>
+                                <div class="">
+                                    <input type="password" name="confirm_password" class="form-control form-control-sm" id="">
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-grid mb-3">
-                            <button class="btn btn-sm btn-primary" type="submit">Sign up</button>
-                        </div>
+                            <div class="d-grid mb-3">
+                                <button class="btn btn-sm btn-primary" type="submit">Sign up</button>
+                            </div>
+                        </form>
                         <div class="mb-4 d-flex flex-column justify-content-center align-items-center">
                             <small>
-                                <a href="/signin" >Already have an account?</a>
+                                <a href="/auth/signin" >Already have an account?</a>
                             </small>
                         </div>
-
                     </div>
                 </div>
             </div>

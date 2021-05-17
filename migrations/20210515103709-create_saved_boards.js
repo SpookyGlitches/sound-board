@@ -31,6 +31,9 @@ module.exports = {
 				type: Sequelize.DataTypes.DATE,
 				allowNull: false,
 			},
+			updated_at: {
+				type: Sequelize.DataTypes.DATE,
+			},
 		});
 	},
 
