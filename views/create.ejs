@@ -15,7 +15,7 @@
             <div class="col-md-6">
                 <h1 class="fw-bolder">Create a sound board</h1>
                 <p>Make sure your visitors wont get bored! 😉</p>
-                <form action="/soundboards/create" method="post">
+                <form onsubmit="return onFormSubmit()" action="/soundboards/create" method="post" id="createSoundBoardForm">
                     <div class="mb-3">
                         <label for="name" class="form-label fw-bold" >Name/Title</label>
                         <input type="text" name="name" class="form-control form-control-sm" id="" placeholder="ex. Dota Voice Lines">
@@ -25,18 +25,21 @@
                         <input type="text" class="form-control form-control-sm" name="description" id="" placeholder="Voice lines found in the video game Defense of the Ancients 2">
                     </div>
                     <div class="mb-4">
-                        <label for="tags" class="form-label fw-bold" >Tags</label>
+                        <label for="tags" class="form-label fw-bold" >Tags</label><br>
                         <div class="row gap-1">
                             <div class="col-md-10 ">
-                                <input type="text" name="tags" class="form-control form-control-sm" name="" id="">
+                                <input type="text" id="tagsField" name="" class="form-control form-control-sm" name="" id="">
                             </div>
                             <div class="col">
-                                <button class="btn btn-primary btn-sm w-100 ">
+                                <button type="button" id="addTagButton" class="btn btn-primary btn-sm w-100 ">
                                     Add
                                 </button>
                             </div>                            
                         </div>
-                        <div id="tagsContainer">
+                        <input type="hidden" name="tags" id="tags">
+                        <small class="text-muted">Click on a tag to remove it</small>
+                        <div id="tagsContainer" class="gap-2">
+
                         </div>
                     </div>
                     <div class="mb-3 d-flex justify-content-end">
@@ -48,4 +51,5 @@
     </div>
     <%- include('./partials/cdn.ejs')%>
 </body>
+<script src="/static/js/create-sboard.js"></script>
 </html>

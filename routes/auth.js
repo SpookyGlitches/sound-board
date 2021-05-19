@@ -15,11 +15,4 @@ router.post("/signup", validate(userValidations.signup), auth.signup);
 
 // router.post("/logout", auth.logout);
 
-// function errorHandler(err, req, res, next) {
-// 	console.log(err);
-// 	res.status(500).send(err);
-// }
-
-// router.use(errorHandler);
-
 module.exports = router;

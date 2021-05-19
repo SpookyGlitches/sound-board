@@ -11,17 +11,17 @@
 
     <div class="container-fluid py-4">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-lg-2">
 
             </div>
-            <div class="col-md-5">
+            <div class="col-lg-5">
                 <h1 class="fw-bolder">Search</h1>
                 <p>
-                    Searching is slow. Optimization will be done later. Thanks ~
+                    Searching is done by a board's tags or its name.
                 </p>
-                <form action="" method="post" class="row g-3">
+                <form action="/soundboards" method="get" class="row g-3">
                     <div class="col-sm-10">
-                        <input class="form-control form-control-sm w-100" type="text" placeholder="ex. sound fx">
+                        <input class="form-control form-control-sm w-100" type="text" placeholder="ex. sound fx" name="filter">
 
                     </div>
                     <div class="col-sm-2">
@@ -33,37 +33,35 @@
                     </div>
                 </form>
                 <div id="searchResults" class="py-4">
-                    <% for( let index = 0; index < 5; index++ ) { %>
+                    <% for( let index = 0; index < sboards.length; index++ ) { %>
                         <div class="card mb-3">
                             <div class="card-body">
                               <%- include('./partials/soundBoardHeader.ejs',
                               {
-                                  "exclude":["date","tags"],
+                                  "exclude":["date","boardOwner"],
                                   "custom":{
                                       title:"h4"
-                                  }
+                                  },
+                                  "sboard":sboards[index]
                               })%>
                             </div>
                         </div>
                     <% } %>
                 </div>
-                <div>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center">
-                          <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                          </li>
-                          <li class="page-item"><a class="page-link" href="#">1</a></li>
-                          <li class="page-item"><a class="page-link" href="#">2</a></li>
-                          <li class="page-item"><a class="page-link" href="#">3</a></li>
-                          <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                          </li>
-                        </ul>
-                      </nav>
+                <div class="d-flex gap-3 justify-content-center">
+                    <% if (offset && offset !=0 ) { %>
+                        <a class="btn btn-primary btn-sm " href="/soundboards?offset=<%=(parseInt(offset) -5) || 0%>" role="button" style="min-width:5rem;"> 
+                            Previous
+                        </a> 
+                    <% } %>
+                    <% if (sboards.length >= 5) { %>
+                        <a class="btn btn-primary btn-sm" href="/soundboards?offset=<%=(parseInt(offset) + 5) || 0%>" role="button" style="min-width:5rem;"> 
+                            Next
+                        </a>                     
+                    <% } %>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-lg-5">
 
             </div>
         </div>

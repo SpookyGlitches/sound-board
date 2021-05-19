@@ -4,21 +4,16 @@ async function fetchSavedBoards() {
 	try {
 		const response = await fetch("/savedboards");
 		if (!response.ok) {
-			console.log(response.status);
 			throw new Error();
 		} else {
 			const svboards = await response.json();
-			console.log(svboards);
 			createSvboardLink(svboards);
 		}
-	} catch (err) {
-		console.log(err);
-	}
+} catch (err) {}
 }
 
 function createSvboardLink(svboards) {
 	var container = document.getElementById("savedBoardsContainer");
-	alert(svboards.length);
 	for (x = 0; x < svboards.length; x++) {
 		let div = document.createElement("div");
 		div.classList.add("overflow-hidden", "mb-1");

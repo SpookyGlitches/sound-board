@@ -2,11 +2,41 @@ const SoundBoard = require("../models/board");
 const SavedBoard = require("../models/saved_board");
 
 const sequelize = require("../config/connection");
-// exports.index = (req, res) => {};
+const { Op } = require("sequelize");
+
+exports.index = async (req, res) => {
+	let offset = req.query.offset || 0;
+	let filter = req.query.filter || "_%";
+	try {
+		const sboards = await SoundBoard.findAll({
+			offset: parseInt(offset) || 0,
+			limit: 5,
+			where: {
+				[Op.or]: [
+					{
+						tags: {
+							[Op.substring]: filter,
+						},
+					},
+					{
+						name: {
+							[Op.like]: filter,
+						},
+					},
+				],
+			},
+		});
+		res.render("explore", { sboards: sboards, offset: offset });
+	} catch (err) {
+		console.error(err);
+		res.send("eror");
+	}
+};
 
 exports.create = async (req, res) => {
 	const t = await sequelize.transaction();
 	try {
+		console.log(req.body.tags);
 		const sboard = await SoundBoard.create(
 			{
 				user_id: req.user.user_id,

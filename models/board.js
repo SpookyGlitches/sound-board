@@ -19,7 +19,12 @@ const board = db.define(
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
+
 		description: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		tags: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
@@ -30,5 +35,13 @@ const board = db.define(
 		tableName: "boards",
 	}
 );
+
+board.associate = (models) => {
+	board.belongsTo(models.user, {
+		foreignKey: {
+			allowNull: false,
+		},
+	});
+};
 
 module.exports = board;

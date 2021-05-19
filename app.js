@@ -19,25 +19,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(fileUpload());
 
-app.use("/static", express.static("public"));
-
 app.use(function (req, res, next) {
-	res.locals.message = req.flash("errors");
+	res.locals.message = req.flash("errors") || [];
 	next();
 });
 
+app.use("/static", express.static("public"));
+
 app.use("/auth", require("./routes/auth"));
+
 app.use("/home", require("./routes/home"));
-app.use((req, res, next) => {
-	if (req.isAuthenticated()) {
-		next();
-	} else {
-		res.redirect("/auth/signin");
-	}
-});
+
 app.use("/savedboards", require("./routes/savedBoards"));
 app.use("/soundboards", require("./routes/soundBoards"));
-
 // app.get("/savedboards", (req, res) => {
 // 	res.json("hello");
 // });

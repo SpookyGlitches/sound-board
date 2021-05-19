@@ -40,4 +40,10 @@ const user = db.define(
 	}
 );
 
+user.associate = (models) => {
+	user.hasMany(models.boards, {
+		onDelete: "cascade",
+	});
+};
+
 module.exports = user;
