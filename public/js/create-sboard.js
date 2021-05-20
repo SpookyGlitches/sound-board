@@ -6,6 +6,7 @@ let tags = [];
 function populateTags() {
 	let existingTags = document.getElementsByClassName("tag");
 	existingTags.forEach((element) => {
+		element.addEventListener("click", deleteTag);
 		tags.push(element.textContent);
 	});
 }

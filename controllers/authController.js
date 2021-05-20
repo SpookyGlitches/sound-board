@@ -1,12 +1,12 @@
 require("dotenv").config();
 
 const bcrypt = require("bcrypt");
-const User = require("../models/user");
-const { Op } = require("sequelize");
+const db = require("../models/db");
+const { Op, DataTypes } = require("sequelize");
+const User = db.users;
 const passport = require("passport");
 const mailgun = require("mailgun-js");
 const { v4: uuidv4 } = require("uuid");
-//ASSUME ALL FIELDS ARE VALIDATED ALREADY!!
 
 exports.getLoginPage = (req, res) => {
 	res.render("signIn");

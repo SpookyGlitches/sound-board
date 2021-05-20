@@ -1,4 +1,4 @@
-const SavedBoards = require("../models/saved_board");
+const SavedBoards = require("../models/db").saved_boards;
 
 exports.index = async (req, res) => {
 	try {

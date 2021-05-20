@@ -32,6 +32,7 @@ app.use("/home", require("./routes/home"));
 
 app.use("/savedboards", require("./routes/savedBoards"));
 app.use("/soundboards", require("./routes/soundBoards"));
+app.use("/test", require("./routes/test"));
 // app.get("/savedboards", (req, res) => {
 // 	res.json("hello");
 // });

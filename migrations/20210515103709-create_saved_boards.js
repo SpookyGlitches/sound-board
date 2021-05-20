@@ -3,7 +3,7 @@
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
 		await queryInterface.createTable("saved_boards", {
-			saved_boards_id: {
+			saved_board_id: {
 				type: Sequelize.DataTypes.BIGINT,
 				autoIncrement: true,
 				allowNull: false,
@@ -33,6 +33,7 @@ module.exports = {
 			},
 			updated_at: {
 				type: Sequelize.DataTypes.DATE,
+				allowNull: true,
 			},
 		});
 	},

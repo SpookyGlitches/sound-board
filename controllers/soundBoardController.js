@@ -1,8 +1,10 @@
-const SoundBoard = require("../models/board");
-const SavedBoard = require("../models/saved_board");
-
 const sequelize = require("../config/connection");
-const { Op } = require("sequelize");
+const { Op, DataTypes } = require("sequelize");
+
+const db = require("../models/db");
+
+const SoundBoard = db.boards;
+const SavedBoard = db.saved_boards;
 
 exports.index = async (req, res) => {
 	let offset = req.query.offset || 0;
@@ -34,7 +36,7 @@ exports.index = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-	const t = await sequelize.transaction();
+	const t = await db.sequelize.transaction();
 	try {
 		console.log(req.body.tags);
 		const sboard = await SoundBoard.create(

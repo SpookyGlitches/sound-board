@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const SoundBoard = require("../models/board");
-const SavedBoard = require("../models/saved_board");
+const db = require("../models/db");
+const SavedBoard = db.saved_boards;
+const SoundBoard = db.boards;
+const User = db.users;
 
 router.use((req, res, next) => {
 	if (req.isAuthenticated()) {
@@ -21,7 +23,7 @@ router.get("/", async (req, res) => {
 					user_id: req.user.user_id,
 				},
 			});
-			if (svboard.length != 0) {
+			if (svboard) {
 				boardId = svboard.board_id;
 			} else {
 				return res.render("home", {
@@ -30,17 +32,29 @@ router.get("/", async (req, res) => {
 				});
 			}
 		} catch (err) {
-			return res.status(500).send();
+			console.log(err);
+			return res.status(500).send("sorry1");
 		}
 	}
 	try {
 		sboard = await SoundBoard.findOne({
+			include: [
+				{
+					model: User,
+					attributes: [
+						"display_name",
+						"user_id",
+						"email_address",
+					],
+				},
+			],
 			where: {
 				board_id: boardId,
 			},
 		});
 	} catch (err) {
-		return res.status(500).send();
+		console.log(err);
+		return res.status(500).send("sorry2");
 	}
 
 	if (sboard == null || sboard.length == 0) {

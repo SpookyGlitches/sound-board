@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const db = require("../config/connection");
+const db = require("./models/connection");
 
 const comment = db.define(
 	"comments",
@@ -33,6 +33,7 @@ const comment = db.define(
 		createdAt: "created_at",
 		updatedAt: "updated_at",
 		tableName: "comments",
+		underscored: true,
 	}
 );
 

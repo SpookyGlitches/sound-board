@@ -9,7 +9,9 @@ async function fetchSavedBoards() {
 			const svboards = await response.json();
 			createSvboardLink(svboards);
 		}
-} catch (err) {}
+	} catch (err) {
+		console.log(err);
+	}
 }
 
 function createSvboardLink(svboards) {

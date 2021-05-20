@@ -35,6 +35,7 @@ const sound = db.define(
 		createdAt: "created_at",
 		updatedAt: "updated_at",
 		tableName: "sounds",
+		underscored: true,
 	}
 );
 
