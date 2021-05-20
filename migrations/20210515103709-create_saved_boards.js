@@ -17,6 +17,7 @@ module.exports = {
 			board_id: {
 				type: Sequelize.DataTypes.BIGINT,
 				allowNull: false,
+				onDelete: "cascade",
 				references: {
 					model: "boards",
 					key: "board_id",

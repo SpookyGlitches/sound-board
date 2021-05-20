@@ -20,7 +20,7 @@ app.use(passport.session());
 app.use(fileUpload());
 
 app.use(function (req, res, next) {
-	res.locals.message = req.flash("errors") || [];
+	res.locals.errors = req.flash("errors") || [];
 	next();
 });
 

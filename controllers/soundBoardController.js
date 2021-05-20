@@ -1,5 +1,4 @@
-const sequelize = require("../config/connection");
-const { Op, DataTypes } = require("sequelize");
+const { Op } = require("sequelize");
 
 const db = require("../models/db");
 
@@ -59,17 +58,93 @@ exports.create = async (req, res) => {
 		res.redirect("/home");
 	} catch (err) {
 		await t.rollback();
-		console.log(err);
 		res.status(404).send("sorry");
 	}
 };
 
 // exports.getOne = (req, res) => {};
 
-// exports.update = (req, res) => {};
+exports.update = (req, res) => {
+	SoundBoard.update(
+		{
+			name: req.body.name,
+			description: req.body.description,
+			tags: req.body.tags,
+		},
+		{
+			where: {
+				user_id: req.user.user_id,
+				board_id: req.params.soundBoardId,
+			},
+		}
+	)
+		.then((sboard) => {
+			if (!sboard) {
+				res.status(404).send("Unable to update row");
+			} else {
+				res.redirect(
+					"/home?board=" + req.params.soundBoardId
+				);
+			}
+		})
+		.catch((err) => res.status(500).send("boom"));
+};
 
-// exports.destroy = (req, res) => {};
+exports.getCreateEditPage = (req, res) => {
+	if (req.params.soundBoardId) {
+		//this is an edit
+		SoundBoard.findOne({
+			where: {
+				user_id: req.user.user_id,
+				board_id: req.params.soundBoardId,
+			},
+		})
+			.then((sboard) => {
+				if (!sboard) {
+					throw new Error();
+				} else {
+					return res.render("create", {
+						sboard: sboard,
+						title: "Edit",
+					});
+				}
+			})
+			.catch((err) => {
+				return res.status(404).send();
+			});
+	} else {
+		//this is a create
+		res.render("create", {
+			sboard: {
+				tags: null,
+				board_id: null,
+				name: null,
+				description: null,
+			},
+			title: "Create",
+		});
+	}
+};
 
-exports.getCreatePage = (req, res) => {
-	res.render("create");
+exports.destroy = (req, res) => {
+	const boardId = parseInt(req.params.soundBoardId);
+	if (typeof boardId != "number") {
+		return res.status(400).send();
+	}
+	SoundBoard.destroy({
+		where: {
+			board_id: boardId,
+			user_id: req.user.user_id,
+		},
+	})
+		.then((board) => {
+			if (!board) {
+				res.status(404).send("404");
+			}
+			res.redirect("/home");
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send("idk");
+		});
 };

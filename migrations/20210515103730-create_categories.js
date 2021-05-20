@@ -12,6 +12,7 @@ module.exports = {
 			board_id: {
 				type: Sequelize.DataTypes.BIGINT,
 				allowNull: false,
+				onDelete: "CASCADE",
 				references: {
 					model: "boards",
 					key: "board_id",
@@ -19,7 +20,10 @@ module.exports = {
 			},
 			name: {
 				type: Sequelize.DataTypes.STRING,
-				default: false,
+				allowNull: false,
+			},
+			description: {
+				type: Sequelize.DataTypes.STRING,
 				allowNull: false,
 			},
 			created_at: {

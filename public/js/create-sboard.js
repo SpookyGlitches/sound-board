@@ -3,12 +3,15 @@ let tagsFld = document.getElementById("tagsField");
 let tagsContainer = document.getElementById("tagsContainer");
 let tags = [];
 
+populateTags();
+
 function populateTags() {
 	let existingTags = document.getElementsByClassName("tag");
-	existingTags.forEach((element) => {
+	for (let index = 0; index < existingTags.length; index++) {
+		const element = existingTags[index];
 		element.addEventListener("click", deleteTag);
 		tags.push(element.textContent);
-	});
+	}
 }
 
 document.getElementById("addTagButton").addEventListener("click", (event) => {

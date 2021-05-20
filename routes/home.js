@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models/db");
+
 const SavedBoard = db.saved_boards;
 const SoundBoard = db.boards;
+const Category = db.categories;
 const User = db.users;
 
 router.use((req, res, next) => {
@@ -46,6 +48,9 @@ router.get("/", async (req, res) => {
 						"user_id",
 						"email_address",
 					],
+				},
+				{
+					model: Category,
 				},
 			],
 			where: {

@@ -19,6 +19,7 @@
                 </div>
                 <div class="col col-sm-10 px-4">
                     <div class="container py-4">
+                        <%- include('./partials/error.ejs') %>
                         <%- include ('./partials/soundBoardHeader.ejs',
                         {
                             "exclude":[],
@@ -42,26 +43,32 @@
                                         </svg>
                                         &nbsp; Add to my sound boards
                                     </button>
-                                <% } %>
-                                <% if (isOp) { %>
+                                <% }else{%>
                                     <button type="button" class="btn btn-sm btn-primary d-flex align-items-center" data-bs-toggle="modal"
-                                data-bs-target="#createCategoryModal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                        <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
-                                    </svg>
-                                    &nbsp; Create category
-                                </button>                         
-                                <% } %>
+                                        data-bs-target="#createCategoryModal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                                        </svg>
+                                        &nbsp; Create category
+                                    </button>   
+                                    <a class="btn btn-primary btn-sm  d-flex align-items-center" href="/soundboards/<%=sboard.board_id%>/edit" role="button"> 
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                          </svg>
+                                        &nbsp; Edit soundboard
+                                    </a>
+                                <%} %>
                             </div>  
                         <div id="soundBoardCategories" class="row mt-3" data-masonry='{"percentPosition":true}'>
-                            <% for( let index = 0; index < 15; index++ ) { %>
+                            <% for( let index = 0; index < sboard.categories.length; index++ ) { %>
                                 <div class="category mb-4 col-sm-4">
                                     <div class="card rounded border" >
                                       <div class="card-body">
                                         <h5 class="card-title fw-bold text-center">
-                                        <a href="/category" class="text-decoration-none text-dark">
-                                                Category Title
-                                            </a>
+                                        <a href="/soundboards/<%=sboard.board_id%>/categories/<%=sboard.categories[index].category_id%>" class="text-decoration-none">
+                                            <%= sboard.categories[index].name %> 
+                                        </a>
                                         </h5>
                                         <div class="d-flex  flex-wrap justify-content-center d-grid gap-2">
                                             <%     var x = Math.random() * (20 - 1) + 1%>
@@ -86,70 +93,72 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="" aria-hidden="">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header p-3">
-                        <h3 class="fw-bolder">
-                            Create a category
-                        </h3>
-                    </div>
-                    <form action="/audio/create-category" method="post">
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="" class="form-label fw-bold">
-                                    Name
-                                </label>
-                                <input type="text" name="title" class="form-control form-control-sm" id="" placeholder="">
-                            </div>
-                            <div class="mb-4">
-                                <label for="" class="form-label fw-bold">
-                                    Description
-                                </label>
-                                <input type="text" name="description" class="form-control form-control-sm" id="" placeholder="">
-                            </div>
-                            <div class="d-flex justify-content-end gap-2">
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
-                                    Close
-                                </button>
-                                <input class="btn btn-primary btn-sm" type="submit" value="Create" />
-                            </div>
+        <% if (sboard && isOp) { %>
+            <div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="" aria-hidden="">
+                <div class="modal-dialog modal-dialog-sm">
+                    <div class="modal-content">
+                        <div class="modal-header p-3">
+                            <h3 class="fw-bolder">
+                                Create a category
+                            </h3>
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="commentsModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="commentsModal" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h3 class="modal-title fw-bolder" id="staticBackdropLabel">Comments</h3>
-              </div>
-              <div class="modal-body">
-                <p class='text-muted'>Remember to keep things nice and appropriate. </p>
-                <div id="commentsContainer">
-                    <% for( let index = 0; index < 15; index++ ) { %>
-                        <div class='mb-2'>
-                            <h6 class='fw-bold m-0'>Name / Time</h6>
-                            <p class='m-0'>Can we please add [insert link here]? Thanks.</p>
-                        </div>
-                    <% } %>
-                </div>
-                <div class="">
-                    <div class="form-group" id="createCommentContainer">
-                        <textarea class="form-control" rows="1" placeholder="Share your thoughts..." id='comment-content' name="content"></textarea>
-                        <div class="d-flex flex-row-reverse">
-                            <button class="btn btn-sm mt-2 btn-primary" id='commentBtn'>Comment</button>
-                        </div>
+                        <form action="/soundboards/<%=sboard.board_id%>/categories/create" method="post">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="" class="form-label fw-bold">
+                                        Name
+                                    </label>
+                                    <input type="text" name="name" class="form-control form-control-sm" id="" placeholder="">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="" class="form-label fw-bold">
+                                        Description
+                                    </label>
+                                    <input type="text" name="description" class="form-control form-control-sm" id="" placeholder="">
+                                </div>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <input class="btn btn-primary btn-sm" type="submit" value="Create" />
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-              </div>
-               
             </div>
-          </div>
-        </div>
+        <% } %>
+        <% if (sboard) { %>
+            <div class="modal fade" id="commentsModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="commentsModal" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title fw-bolder" id="staticBackdropLabel">Comments</h3>
+                    </div>
+                    <div class="modal-body">
+                      <p class='text-muted'>Remember to keep things nice and appropriate. </p>
+                      <div id="commentsContainer">
+                          <% for( let index = 0; index < 15; index++ ) { %>
+                              <div class='mb-2'>
+                                  <h6 class='fw-bold m-0'>Name / Time</h6>
+                                  <p class='m-0'>Can we please add [insert link here]? Thanks.</p>
+                              </div>
+                          <% } %>
+                      </div>
+                      <div class="">
+                          <div class="form-group" id="createCommentContainer">
+                              <textarea class="form-control" rows="1" placeholder="Share your thoughts..." id='comment-content' name="content"></textarea>
+                              <div class="d-flex flex-row-reverse">
+                                  <button class="btn btn-sm mt-2 btn-primary" id='commentBtn'>Comment</button>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                     
+                  </div>
+                </div>
+              </div>  
+        <% } %>
         
         <%- include('./partials/cdn.ejs')%>
 </body>

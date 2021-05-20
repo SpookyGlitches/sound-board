@@ -1,8 +1,13 @@
-<% if (message && message.length != 0) { %>
+<% if (errors && errors.length != 0) { %>
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <% for( let index = 0; index < message.length; index++ ) { %>
-            <small class=""><%= message[index].msg %></small>    
+        <h6 class="">There were error/s on your request.</h6>
+        <ul class="mb-1 ">
+            <% for( let index = 0; index < errors.length; index++ ) { %>
+                <li>
+                    <small class=""><%= errors[index].msg %></small>    
+                </li>
         <% } %>
+        </ul>
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <% } %>

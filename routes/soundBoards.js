@@ -15,14 +15,20 @@ router.use((req, res, next) => {
 
 router.get("/", sboard.index);
 
-router.post("/create", sboard.create);
+router.post("/create", validate(soundBoardValidation), sboard.create);
 
-// router.get("/:soundBoardId", sboard.getOne);
+router.post(
+	"/:soundBoardId/edit",
+	validate(soundBoardValidation),
+	sboard.update
+);
 
-router.get("/create", sboard.getCreatePage);
+router.get("/create", sboard.getCreateEditPage);
 
-// router.get("/:soundBoardId/edit", sboard.update);
+router.get("/:soundBoardId/edit", sboard.getCreateEditPage);
 
-// router.post("/:soundBoardId/delete", sboard.destroy);
+router.post("/:soundBoardId/delete", sboard.destroy);
+
+router.use("/:soundBoardId/categories", require("./categories"));
 
 module.exports = router;

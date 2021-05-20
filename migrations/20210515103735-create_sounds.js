@@ -12,6 +12,7 @@ module.exports = {
 			category_id: {
 				type: Sequelize.DataTypes.BIGINT,
 				allowNull: false,
+				onDelete: "cascade",
 				references: {
 					model: "categories",
 					key: "category_id",

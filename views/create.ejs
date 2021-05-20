@@ -15,14 +15,18 @@
             <div class="col-md-6">
                 <h1 class="fw-bolder"><%=title%> a sound board</h1>
                 <p>Make sure your visitors wont get bored! 😉</p>
-                <form onsubmit="return onFormSubmit()" action="/soundboards/<%=title.toLowerCase()%>" method="post" id="createSoundBoardForm">
+                <%let route = title == 'Edit' ? sboard.board_id+"/edit" : title.toLowerCase()%>
+                <form onsubmit="return onFormSubmit()" action="/soundboards/<%=route%>" method="post" id="createSoundBoardForm">
+                    <%- include("./partials/error.ejs")%>
+
+                    <input type="hidden" name="board_id" value="<%=sboard.board_id%>">
                     <div class="mb-3">
                         <label for="name" class="form-label fw-bold" >Name/Title</label>
-                        <input type="text" name="name" class="form-control form-control-sm" id="" placeholder="ex. Dota Voice Lines">
+                        <input type="text" name="name" value="<%= sboard.name %>" class="form-control form-control-sm" id="" placeholder="ex. Dota Voice Lines">
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label fw-bold" >Description</label>
-                        <input type="text" class="form-control form-control-sm" name="description" id="" placeholder="Voice lines found in the video game Defense of the Ancients 2">
+                        <input type="text" class="form-control form-control-sm" value="<%=sboard.description%>" name="description" id="" placeholder="Voice lines found in the video game Defense of the Ancients 2">
                     </div>
                     <div class="mb-4">
                         <label for="tags" class="form-label fw-bold" >Tags</label><br>
@@ -37,21 +41,30 @@
                             </div>                            
                         </div>
                         <input type="hidden" name="tags" id="tags">
-                        <small class="text-muted">Click on a tag to remove it</small>
-                        <div id="tagsContainer" class="gap-2">
-                            <%= let tags = sboard.split(',') %>
-                            <% for( let index = 0; index < array.length; index++ ) { %>
-                            
+                        <small class="text-muted mb-1">Click on a tag to remove it</small>
+                        <div id="tagsContainer" class="">
+                            <% let tags = sboard.tags === null ? [] : sboard.tags.split(',') %>
+                            <% for( let index = 0; index < tags.length; index++ ) { %>
+                                <button type="button" class="btn btn-sm btn-light mb-1 tag" ><%= tags[index] %></button>
                             <% } %>
-                            <button type="button" class="btn btn-sm btn-light mb-1 tag" >
 
-                            </button>
                         </div>
                     </div>
-                    <div class="mb-3 d-flex justify-content-end">
+                    <div class="mb-4 d-flex justify-content-end">
                         <button type="submit" class="btn btn-primary btn-sm"><%= title %> board</button>
                     </div>
                 </form>
+                <% if (title == 'Edit') { %>
+                    <form action="/soundboards/<%=sboard.board_id%>/delete" method="post" onsubmit="return confirm('All categories, comments, and sounds will be lost. Proceed?')">
+                        <div class="d-flex justify-content-start">
+                            <small>
+                                <button type="submit" class="btn btn-light btn-sm d-flex delete-btn">Delete</button>
+                            </small>
+
+                        </div>
+                    </form>
+                <% } %>
+          
             </div>
         </div>
     </div>
