@@ -42,6 +42,9 @@ module.exports = function (sequelize, DataTypes) {
 		board.hasMany(models.categories, {
 			foreignKey: "board_id",
 		});
+		board.hasMany(models.comments, {
+			foreignKey: "board_id",
+		});
 	};
 	return board;
 };

@@ -31,4 +31,6 @@ router.post("/:soundBoardId/delete", sboard.destroy);
 
 router.use("/:soundBoardId/categories", require("./categories"));
 
+router.use("/:soundBoardId/comments", require("./comments"));
+
 module.exports = router;

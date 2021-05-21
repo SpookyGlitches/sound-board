@@ -9,7 +9,7 @@ const mailgun = require("mailgun-js");
 const { v4: uuidv4 } = require("uuid");
 
 exports.getLoginPage = (req, res) => {
-	res.render("signIn");
+	res.render("signIn", { error: req.flash("error") });
 };
 
 exports.getSignupPage = (req, res) => {
@@ -21,6 +21,11 @@ exports.signin = passport.authenticate("local", {
 	failureRedirect: "/auth/signin",
 	failureFlash: true,
 });
+
+exports.signout = (req, res) => {
+	req.logout();
+	res.redirect("/auth/signin");
+};
 
 exports.signup = async (req, res, next) => {
 	//todo

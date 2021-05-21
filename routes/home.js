@@ -6,6 +6,7 @@ const SavedBoard = db.saved_boards;
 const SoundBoard = db.boards;
 const Category = db.categories;
 const User = db.users;
+const Comment = db.comments;
 
 router.use((req, res, next) => {
 	if (req.isAuthenticated()) {
@@ -50,6 +51,18 @@ router.get("/", async (req, res) => {
 					],
 				},
 				{
+					model: Comment,
+					include: [
+						{
+							model: User,
+							attributes: [
+								"display_name",
+								"user_id",
+							],
+						},
+					],
+				},
+				{
 					model: Category,
 				},
 			],
@@ -68,6 +81,7 @@ router.get("/", async (req, res) => {
 		res.render("home", {
 			sboard: sboard,
 			isOp: req.user.user_id == sboard.user_id,
+			user_id: req.user.user_id,
 		});
 	}
 });

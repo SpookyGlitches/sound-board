@@ -34,18 +34,20 @@
                 </form>
                 <div id="searchResults" class="py-4">
                     <% for( let index = 0; index < sboards.length; index++ ) { %>
+                        <a href="/home?boardId=<%=sboards[index].board_id%>" target="_blank" class="text-decoration-none text-dark">
                         <div class="card mb-3">
                             <div class="card-body">
-                              <%- include('./partials/soundBoardHeader.ejs',
-                              {
-                                  "exclude":["date","boardOwner"],
-                                  "custom":{
-                                      title:"h4"
-                                  },
-                                  "sboard":sboards[index]
-                              })%>
+                                    <%- include('./partials/soundBoardHeader.ejs',
+                                    {
+                                        "exclude":["date","boardOwner"],
+                                        "custom":{
+                                            title:"h4"
+                                        },
+                                        "sboard":sboards[index]
+                                    })%>
                             </div>
                         </div>
+                        </a>
                     <% } %>
                 </div>
                 <div class="d-flex gap-3 justify-content-center">

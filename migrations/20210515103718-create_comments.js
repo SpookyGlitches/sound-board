@@ -13,10 +13,12 @@ module.exports = {
 				type: Sequelize.DataTypes.BIGINT,
 				allowNull: false,
 				references: { model: "users", key: "user_id" },
+				onDelete: "cascade",
 			},
 			board_id: {
 				type: Sequelize.DataTypes.BIGINT,
 				allowNull: false,
+				onDelete: "cascade",
 				references: {
 					model: "boards",
 					key: "board_id",
@@ -30,10 +32,6 @@ module.exports = {
 			created_at: {
 				type: Sequelize.DataTypes.DATE,
 				allowNull: false,
-			},
-			deleted_at: {
-				type: Sequelize.DataTypes.DATE,
-				allowNull: true,
 			},
 		});
 	},

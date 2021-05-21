@@ -20,22 +20,18 @@ app.use(passport.session());
 app.use(fileUpload());
 
 app.use(function (req, res, next) {
-	res.locals.errors = req.flash("errors") || [];
+	res.locals.success = req.flash("success");
+	res.locals.errors = req.flash("errors");
 	next();
 });
 
 app.use("/static", express.static("public"));
 
 app.use("/auth", require("./routes/auth"));
-
 app.use("/home", require("./routes/home"));
-
 app.use("/savedboards", require("./routes/savedBoards"));
 app.use("/soundboards", require("./routes/soundBoards"));
 app.use("/test", require("./routes/test"));
-// app.get("/savedboards", (req, res) => {
-// 	res.json("hello");
-// });
 
 app.listen(port, () => {
 	console.log(`App listening in ${port}`);

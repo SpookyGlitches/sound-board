@@ -32,6 +32,7 @@ const models = [
 	require("./saved_board")(sequelize, DataTypes),
 	require("./category")(sequelize, DataTypes),
 	require("./sound")(sequelize, DataTypes),
+	require("./comment")(sequelize, DataTypes),
 ];
 
 // fs.readdirSync(__dirname)

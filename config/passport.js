@@ -22,10 +22,17 @@ passport.use(
 					message: "No account associated with that email address",
 				});
 			}
-			if (!validatePassword(user, password)) {
+			const result = bcrypt.compareSync(
+				password,
+				user.password
+			);
+			// const result = validatePassword(user, password);
+			if (result == false) {
 				return done(null, false, {
 					message: "Incorrect password.",
 				});
+			} else {
+				console.log("HEEEEEEE");
 			}
 			return done(null, user);
 		} catch (err) {
@@ -46,9 +53,17 @@ passport.deserializeUser(function (user, done) {
 	done(null, user);
 });
 
-function validatePassword(user, password) {
-	var comp = bcrypt.compare(password, user.password);
-	return comp;
-}
+// function validatePassword(user, password) {
+// 	console.log(user);
+// 	console.log(password);
+
+// 	bcrypt.compare(password, user.password)
+// 		.then(function (result) {
+// 			return result;
+// 		})
+// 		.catch((err) => {
+// 			return false;
+// 		});
+// }
 
 module.exports = passport;

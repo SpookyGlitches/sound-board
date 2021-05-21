@@ -39,6 +39,7 @@ module.exports = function (sequelize, DataTypes) {
 	sound.associate = (models) => {
 		sound.belongsTo(models.categories, {
 			foreignKey: "category_id",
+			onDelete: "cascade",
 		});
 	};
 	return sound;

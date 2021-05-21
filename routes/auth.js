@@ -13,6 +13,6 @@ router.post("/signin", validate(userValidations.signin), auth.signin);
 
 router.post("/signup", validate(userValidations.signup), auth.signup);
 
-// router.post("/logout", auth.logout);
+router.get("/signout", auth.signout);
 
 module.exports = router;
