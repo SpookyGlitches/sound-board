@@ -1,4 +1,4 @@
-/public/audios/
+/public/sounds/*
 .env
 /node_modules
 db_design.sql
