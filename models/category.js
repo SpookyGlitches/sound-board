@@ -40,7 +40,7 @@ module.exports = function (sequelize, DataTypes) {
 			onDelete: "cascade",
 		});
 		category.hasMany(models.sounds, {
-			foreignKey: "board_id",
+			foreignKey: "category_id",
 		});
 	};
 	return category;

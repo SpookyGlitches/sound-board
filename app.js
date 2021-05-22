@@ -17,7 +17,11 @@ app.use(session({ secret: "C4$s", resave: false, saveUninitialized: false }));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(fileUpload());
+app.use(
+	fileUpload({
+		safeFileNames: true,
+	})
+);
 
 app.use(function (req, res, next) {
 	res.locals.success = req.flash("success");

@@ -19,4 +19,6 @@ router.post(
 
 router.post("/:categoryId/delete", category.destroy);
 
+router.use("/:categoryId/sounds", require("./sounds"));
+
 module.exports = router;
