@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-
 </head>
 <body class="h-100">
     <%- include('./partials/navbar.ejs')%>
@@ -30,7 +29,7 @@
 
                         }) -%>
                         <% if (sboard) { %>
-                            <div class="d-grid d-flex justify-content-end gap-2 mt-1" id='soundBoardOptions'>
+                            <div class="d-grid d-flex justify-content-end gap-2" id='soundBoardOptions'>
                                 <button type="button" class="btn btn-primary btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#commentsModal">
                                     Comments
                                 </button>
@@ -51,7 +50,7 @@
                         <div id="soundBoardCategories" class="row mt-3" data-masonry='{"percentPosition":true}'>
                             <% for( let index = 0; index < sboard.categories.length; index++ ) { %>
                                 <div class="category mb-4 col-sm-4">
-                                    <div class="card rounded " >
+                                    <div class="card rounded border" >
                                       <div class="card-body">
                                         <h5 class="card-title fw-bold text-center">
                                         <a href="/soundboards/<%=sboard.board_id%>/categories/<%=sboard.categories[index].category_id%>" class="text-decoration-none">
@@ -63,11 +62,7 @@
                                             <% for( let index = 0; index < x; index++ ) { %>
                                                 <% var y = Math.floor(Math.random() * (4 - 0) + 0) %>
                                                 <% var str = ["Miku noise","Gawr","hello","PEKOPEKOPEKO","NEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"]%>
-                                                <button class='mb-1 btn  sound btn-sm bg-light'>
-                                                    <%= str[y] %>
-                                                    <!-- <div class="spinner-grow spinner-grow-sm text-danger " role="status">
-                                                    </div> -->
-                                                </button>
+                                                <button class='mb-1 btn btn-light sound btn-sm'><%= str[y] %> </button>
                                             <% } %>
                                         </div>
                                       </div>
@@ -162,8 +157,9 @@
               </div>  
         <% } %>
 </body>
-<%- include('./partials/cdn.ejs')%>
 <script src="/static/js/home.js"></script>
+<%- include('./partials/cdn.ejs')%>
+
 <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
 	integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
 	async></script>

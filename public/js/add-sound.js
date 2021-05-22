@@ -1,14 +1,11 @@
 document.getElementById("file").addEventListener("change", validateFile);
 
 function validateFile(event) {
-	const extensions = [".mp3", ".ogg", ".wav"];
-	let btn = document.getElementById("submit");
-	btn.disabled = false;
+	const extensions = [".mp3", ".ogg"];
 	if (!hasExtension(extensions, event.target)) {
-		event.target.value = null;
-		btn.disabled = true;
 		alert("Supported files are " + extensions.toString() + ".");
-	} else if (true) {
+		event.target.value = null;
+		return;
 	}
 }
 

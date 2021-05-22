@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Category</title>
-
 </head>
+
 <body>
     <%- include('./partials/navbar.ejs') %>
         <div class="container py-4">
@@ -16,7 +16,6 @@
                 <h1 class="fw-bolder"><%=sboard.categories[0].name%></h1>
                 <div class="row">
                     <div class="col-lg-10">
-                        
                         <p>
                             <%=sboard.categories[0].description%>
                         </p>
@@ -32,44 +31,34 @@
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCategoryModal">
                         Edit
                     </button>
-                    <button type="button" data-action="add" id="" class="btn btn-primary btn-sm sound-button-modal" data-bs-toggle="modal"
-                        >
+                    <button type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal"
+                        data-bs-target="#addSoundModal">
                         Add sound
                     </button>
                 </div>
-                <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/delete" method="post" onsubmit="return confirm('This category and its asssociated sounds will be deleted. Proceed? ')">
-                    <button type="submit" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                     data-bs-target="#deleteCategoryModal">
                     Delete
-                </button>            
-                </form>
-
+                </button>
 
 
             </div>
             <div class="row mt-3" data-masonry='{"percentPosition":true}'>
-                <% for( let index = 0; index < sboard.categories[0].sounds.length; index++ ) { %>
-                    <% let sounds = sboard.categories[0].sounds %>
+                <% for( let index = 0; index < 15; index++ ) { %>
                     <div class="col-sm-4 mb-4">
-                        <div class="card rounded ">
-                            <div class="card-body text-center">
-                                <div class="sound" style="cursor:pointer;" data-src="<%= sounds[index].file %> ">
-                                    <h6 class="fw-bold text-center">
-                                        <%= sounds[index].label %> 
-                                    </h6>
-                                    <p class="m-0 text-center text-muted">
-                                        <small>
-                                            <%= sounds[index].description %>
-                                        </small>
-                                    </p>
-                                </div>
+                        <div class="card rounded border">
+                            <div class="card-body">
+                                <h6 class="fw-bold text-center">
+                                    Hello
+                                </h6>
+                                <p class="m-0 text-center text-muted"><small>Hello</small></p>
                                 <div class='d-flex gap-2 justify-content-center'>
-                                    <button data-soundid="<%= sounds[index].sound_id %>"  class='btn btn-sm btn-light'  data-bs-toggle="modal" data-bs-target="#deleteCategoryModal"> 
+                                    <button class='btn btn-sm btn-light'  data-bs-toggle="modal" data-bs-target="#deleteCategoryModal"> 
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                                             <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
                                         </svg>
                                     </button>
-                                    <button  data-soundid="<%= sounds[index].sound_id %>" data-label="<%= sounds[index].label %>" data-description="<%= sounds[index].description %>" class='btn sound-button-modal btn-sm btn-light' data-bs-toggle="modal"  data-action="edit">
+                                    <button class='btn btn-sm btn-light' data-bs-toggle="modal" data-bs-target="#addSoundModal">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -81,6 +70,24 @@
                     </div>
                 <% } %>
             </div>
+        </div>
+        <div class="modal fade" id="deleteCategoryModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="deleteCategoryModal" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title fw-bolder" id="">Delete category</h3>
+              </div>
+              <div class="modal-body">
+                  <p class='text-center'>
+                      All sounds will be lost. Are you sure you want to delete this category?
+                  </p>
+                  <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/delete" class='d-flex gap-2 justify-content-center' method="post">
+                      <button class='btn btn-sm btn-primary' type="submit">Delete</button>
+                      <button class='btn btn-sm btn-primary' aria-label='close' type="button" data-bs-dismiss="modal">Cancel</button>
+                  </form>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="modal fade" id="editCategoryModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="editCategoryModal" aria-hidden="true">
           <div class="modal-dialog">
@@ -113,29 +120,29 @@
             </div>
           </div>
         </div>
-         <div class="modal fade" id="soundModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addSoundModal" aria-hidden="true" >
+         <div class="modal fade" id="addSoundModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addSoundModal" aria-hidden="true" >
            <div class="modal-dialog">
              <div class="modal-content">
                <div class="modal-header">
-                 <h3 class="modal-title fw-bolder" id="sound-title">Add/edit sound</h3>
+                 <h3 class="modal-title fw-bolder" id="">Add/edit sound</h3>
                </div>
                <div class="modal-body">
-                    <form data-sboardid="<%= sboard.board_id %>" data-catid='<%= sboard.categories[0].category_id %>'  method="post" id="form" enctype="multipart/form-data">
+                    <form action="" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="label" class="form-label fw-bold">Label</label>
-                            <input type="text" id="sound-label" name="label" class="form-control form-control-sm" id="" placeholder="">
+                            <input type="text" name="kabek" class="form-control form-control-sm" id="" placeholder="">
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label fw-bold">Description</label>
-                            <input type="text" name="description" id="sound-description" class="form-control form-control-sm" id="" placeholder="">
+                            <input type="text" name="description" class="form-control form-control-sm" id="" placeholder="">
                         </div>
                         <div class="mb-3">
                             <label for="sound-file" class="form-label fw-bold">Sound file</label>
-                            <input class="form-control form-control-sm" id="file" type="file" name="sound">
+                            <input class="form-control form-control-sm" id="file" type="file">
                         </div>
                         <div class="mb-2 d-flex gap-2 justify-content-end">
                             <button class="btn btn-primary btn-sm" type="button" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary btn-sm" type="submit" id="submit">Submit</button>
+                            <button class="btn btn-primary btn-sm" type="submit">Submit</button>
                         </div>
                     </form>              
                </div>
@@ -144,13 +151,10 @@
          </div>
          
 </body>
-<%- include('./partials/cdn.ejs')%>
-
-<script src="/static/js/category.js"></script>
 <script src="/static/js/add-sound.js"></script>
-<script src="/static/js/play-sound.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
 	integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
 	async></script>
+<%- include('./partials/cdn.ejs')%>
 
 </html>

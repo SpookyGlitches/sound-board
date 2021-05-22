@@ -3,7 +3,6 @@ const db = require("../models/db");
 const SoundBoard = db.boards;
 const Category = db.categories;
 const User = db.users;
-const Sound = db.sounds;
 
 exports.create = async (req, res) => {
 	const t = await db.sequelize.transaction();
@@ -46,11 +45,9 @@ exports.index = (req, res) => {
 		include: [
 			{
 				model: Category,
-				include: [
-					{
-						model: Sound,
-					},
-				],
+				where: {
+					category_id: req.params.categoryId,
+				},
 			},
 		],
 	})
