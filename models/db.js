@@ -23,9 +23,6 @@ if (config.use_env_variable) {
 	);
 }
 
-// const User = require("./user")(sequelize, DataTypes);
-// const Board = require("./board")(sequelize, DataTypes);
-// const SavedBoard = require("./saved_board")(sequelize, DataTypes);
 const models = [
 	require("./user")(sequelize, DataTypes),
 	require("./board")(sequelize, DataTypes),
@@ -34,22 +31,6 @@ const models = [
 	require("./sound")(sequelize, DataTypes),
 	require("./comment")(sequelize, DataTypes),
 ];
-
-// fs.readdirSync(__dirname)
-// 	.filter((file) => {
-// 		return (
-// 			file.indexOf(".") !== 0 &&
-// 			file !== basename &&
-// 			file.slice(-3) === ".js"
-// 		);
-// 	})
-// 	.forEach((file) => {
-// 		const model = require(path.join(__dirname, file))(
-// 			sequelize,
-// 			Sequelize.DataTypes
-// 		);
-// 		db[model.name] = model;
-// 	});
 
 models.forEach((model) => {
 	console.log(model.name);
@@ -61,20 +42,8 @@ models.forEach((model) => {
 		db[model.name].associate(db);
 	}
 });
-// db.users = User;
-// db.boards = Board;
-// db.svboards = SavedBoard;
 
-// db.users.hasMany(db.boards, { foreignKey: "user_id" });
-
-// db.boards.belongTo(db.users, { foreignKey: "user_id" });
-
-// db.users = Object.keys(db).forEach((modelName) => {
-// 	if (db[modelName].associate) {
-// 		db[modelName].associate(db);
-// 	}
-// });
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-// db.sequelize.authenticate();
+
 module.exports = db;

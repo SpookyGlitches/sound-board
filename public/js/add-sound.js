@@ -1,11 +1,14 @@
 document.getElementById("file").addEventListener("change", validateFile);
 
 function validateFile(event) {
-	const extensions = [".mp3", ".ogg"];
+	const extensions = [".mp3", ".ogg", ".wav"];
+	let btn = document.getElementById("submit");
+	btn.disabled = false;
 	if (!hasExtension(extensions, event.target)) {
-		alert("Supported files are " + extensions.toString() + ".");
 		event.target.value = null;
-		return;
+		btn.disabled = true;
+		alert("Supported files are " + extensions.toString() + ".");
+	} else if (true) {
 	}
 }
 
