@@ -5,27 +5,39 @@ for (x = 0; x < soundButtonsModal.length; x++) {
 }
 
 function changeModalDetails(event) {
-	let submitBtn = document.getElementById("submit");
+	let label = document.getElementById("sound-label");
+	let desc = document.getElementById("sound-description");
 	let soundTitle = document.getElementById("sound-title");
 	let form = document.getElementById("form");
-	let labelField = document.getElementById("sound-label");
-	let descField = document.getElementById("sound-description");
-	var modal = document.getElementById("soundModal");
+	let route = `/soundboards/${form.dataset.sboardid}/categories/${form.dataset.catid}/sounds`;
+	let modal = new bootstrap.Modal(
+		document.getElementById("soundModal"),
+		{}
+	);
 
-	submitBtn.disabled = true;
-	form.action = `/soundboards/${form.dataset.sboardid}/categories/${form.dataset.catid}/sounds`;
-	if (event.target.dataset.action == "add") {
-		labelField.value = "";
-		descField.value = "";
-		form.action += "/create";
+	let target = event.currentTarget;
+	if (target.dataset.action == "add") {
+		desc.value = "";
+		label.value = "";
+		form.action = route + "/create";
 		soundTitle.textContent = "Add sound";
-	} else {
-		labelField.value = event.target.dataset.label;
-		descField.value = event.target.dataset.description;
-		form.action += `/${event.target.dataset.soundid}/edit`;
-		soundTitle.textContent = "Edit sound";
-		document.getElementById("file").text = "Change sound";
+		modal.show();
+		return;
 	}
-	bootstrap.Modal.getInstance(modal).show();
-	submitBtn.disabled = false;
+	route += `/${target.dataset.soundid}/edit`;
+	soundTitle.textContent = "Edit sound";
+	fetch(route)
+		.then((response) => {
+			if (!response.ok) throw new Error();
+			return response.json();
+		})
+		.then((result) => {
+			form.action = route;
+			desc.value = result.description;
+			label.value = result.label;
+			modal.show();
+		})
+		.catch((err) => {
+			alert("Error in retrieving sound");
+		});
 }
