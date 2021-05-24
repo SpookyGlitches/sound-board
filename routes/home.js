@@ -6,6 +6,7 @@ const SavedBoard = db.saved_boards;
 const SoundBoard = db.boards;
 const Category = db.categories;
 const User = db.users;
+const Sound = db.sounds;
 const Comment = db.comments;
 
 router.use((req, res, next) => {
@@ -17,30 +18,25 @@ router.use((req, res, next) => {
 });
 
 router.get("/", async (req, res) => {
-	let boardId = req.query.board;
-	let sboard = null;
-	if (!req.query.board) {
-		try {
-			const svboard = await SavedBoard.findOne({
+	try {
+		let boardId = req.query.board;
+		let obj = { isSaved: true, user_id: req.user.user_id };
+		if (!boardId) {
+			//get one in saved boards
+			let svboard = await SavedBoard.findOne({
 				where: {
-					user_id: req.user.user_id,
+					user_id: obj.user_id,
 				},
 			});
-			if (svboard) {
-				boardId = svboard.board_id;
-			} else {
+			if (!svboard)
 				return res.render("home", {
 					sboard: null,
 					isOp: false,
 				});
-			}
-		} catch (err) {
-			console.log(err);
-			return res.status(500).send("sorry1");
+			boardId = svboard.board_id;
 		}
-	}
-	try {
-		sboard = await SoundBoard.findOne({
+		//get the board
+		obj.sboard = await SoundBoard.findByPk(boardId, {
 			include: [
 				{
 					model: User,
@@ -64,25 +60,29 @@ router.get("/", async (req, res) => {
 				},
 				{
 					model: Category,
+					include: [
+						{
+							model: Sound,
+						},
+					],
 				},
 			],
-			where: {
-				board_id: boardId,
-			},
 		});
+		if (!obj.sboard) return res.status(404).send();
+		obj.isOp = obj.user_id == obj.sboard.user_id;
+		// diz bad code huhuhu
+		if (!obj.isOp) {
+			let aaa = await SavedBoard.findOne({
+				where: {
+					board_id: boardId,
+					user_id: obj.user_id,
+				},
+			});
+			obj.isSaved = aaa !== null;
+		}
+		res.render("home", obj);
 	} catch (err) {
-		console.log(err);
-		return res.status(500).send("sorry2");
-	}
-
-	if (sboard == null || sboard.length == 0) {
-		res.status(404).send("Board not found");
-	} else {
-		res.render("home", {
-			sboard: sboard,
-			isOp: req.user.user_id == sboard.user_id,
-			user_id: req.user.user_id,
-		});
+		res.send(err);
 	}
 });
 

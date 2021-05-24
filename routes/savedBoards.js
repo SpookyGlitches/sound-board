@@ -5,7 +5,7 @@ const svboard = require("../controllers/savedBoardController");
 const validate = require("../validations/mw");
 const svboardValidation = require("../validations/savedBoard");
 
-// router.post("/create", svboard.create);
+router.post("/create/:soundBoardId", svboard.create);
 
 router.get("/", svboard.index);
 

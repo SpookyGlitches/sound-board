@@ -34,7 +34,7 @@
                 </form>
                 <div id="searchResults" class="py-4">
                     <% for( let index = 0; index < sboards.length; index++ ) { %>
-                        <a href="/home?boardId=<%=sboards[index].board_id%>" target="_blank" class="text-decoration-none text-dark">
+                        <a href="/home?board=<%=sboards[index].board_id%>" target="_blank" class="text-decoration-none text-dark">
                         <div class="card mb-3   ">
                             <div class="card-body">
                                     <%- include('./partials/soundBoardHeader.ejs',

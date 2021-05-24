@@ -33,5 +33,15 @@ module.exports = function (sequelize, DataTypes) {
 			underscored: true,
 		}
 	);
+	saved_board.associate = (models) => {
+		saved_board.belongsTo(models.boards, {
+			foreignKey: "board_id",
+			onDelete: "cascade",
+		});
+		saved_board.belongsTo(models.users, {
+			foreignKey: "user_id",
+			onDelete: "cascade",
+		});
+	};
 	return saved_board;
 };

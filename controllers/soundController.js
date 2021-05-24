@@ -1,4 +1,6 @@
+// const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
+
 const db = require("../models/db");
 
 const Sound = db.sounds;
@@ -90,6 +92,8 @@ exports.destroy = [
 		})
 			.then((sound) => {
 				if (!sound) throw new Error();
+				//sequelize only returns the number of rows deleted, bruh.
+				// fs.unlinkSync("./public/sounds/" + sound.file);
 				req.flash(
 					"success",
 					"Successfully deleted the sound."
@@ -97,6 +101,7 @@ exports.destroy = [
 				res.redirect("back");
 			})
 			.catch((err) => {
+				console.log(err);
 				res.send("Something went wrong");
 			});
 	},

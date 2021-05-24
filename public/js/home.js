@@ -1,12 +1,29 @@
+let svboards;
 fetchSavedBoards();
 
+document.getElementById("search").addEventListener("keyup", (event) => {
+	if (event.currentTarget.value.length != 0) {
+		let result = svboards.filter((e) => {
+			console.log(e);
+			return e.board.name
+				.toLowerCase()
+				.includes(
+					event.currentTarget.value.toLowerCase()
+				);
+		});
+		createSvboardLink(result);
+	} else {
+		createSvboardLink(svboards);
+	}
+});
 async function fetchSavedBoards() {
 	try {
 		const response = await fetch("/savedboards");
 		if (!response.ok) {
 			throw new Error();
 		} else {
-			const svboards = await response.json();
+			svboards = await response.json();
+			console.log(svboards);
 			createSvboardLink(svboards);
 		}
 	} catch (err) {
@@ -16,37 +33,21 @@ async function fetchSavedBoards() {
 
 function createSvboardLink(svboards) {
 	var container = document.getElementById("savedBoardsContainer");
+	container.innerHTML = "";
 	for (x = 0; x < svboards.length; x++) {
 		let div = document.createElement("div");
 		div.classList.add("overflow-hidden", "mb-1");
 
 		let a = document.createElement("a");
 		a.classList.add("text-decoration-none");
+		a.href = "/home?board=" + svboards[x].board_id;
 
 		let h6 = document.createElement("h6");
-		h6.innerHTML = svboards[x].name;
+		h6.innerHTML = svboards[x].board.name;
 
 		a.appendChild(h6);
 		div.appendChild(a);
 
 		container.appendChild(div);
 	}
-
-	// <div class='overflow-hidden mb-1'>
-	// 	<a href="" class='text-decoration-none'>
-	// 		<h6>aaaaaaaaaaaaaaaddddddddddddddddda</h6>
-	// 	</a>
-	// </div>
 }
-// var audio = new Audio();
-// var button;
-// document.querySelectorAll(".sound").forEach((btn) =>
-// 	btn.addEventListener("click", (event) => {
-// 		audio.src =
-// 			"https://www.myinstants.com/media/sounds/miku-miku-uwu.mp3";
-// 		button = event.target;
-// 	})
-// );
-// audio.oncanplay = () => {
-// 	audio.play();
-// };

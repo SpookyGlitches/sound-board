@@ -124,9 +124,7 @@ exports.destroy = (req, res) => {
 			if (!category) {
 				return res.status(404).send("not found");
 			}
-			res.redirect(
-				`/home?boardId=${req.params.soundBoardId}`
-			);
+			res.redirect(`/home?board=${req.params.soundBoardId}`);
 		})
 		.catch((err) => {
 			res.send("hoy");

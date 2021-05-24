@@ -16,6 +16,7 @@ function populateTags() {
 
 document.getElementById("addTagButton").addEventListener("click", (event) => {
 	let val = tagsFld.value.trim();
+	tagsFld.value = "";
 	if (val.length == 0 || tags.includes(val)) {
 		return;
 	}
