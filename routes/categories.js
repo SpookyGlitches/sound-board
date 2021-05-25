@@ -4,8 +4,11 @@ const router = express.Router({
 });
 
 const category = require("../controllers/categoryController");
+
 const validate = require("../validations/mw");
 const categoryValidation = require("../validations/category");
+
+const soundRouter = require("./sounds");
 
 router.post("/create", validate(categoryValidation), category.create);
 
@@ -19,6 +22,6 @@ router.post(
 
 router.post("/:categoryId/delete", category.destroy);
 
-router.use("/:categoryId/sounds", require("./sounds"));
+router.use("/:categoryId/sounds", soundRouter);
 
 module.exports = router;

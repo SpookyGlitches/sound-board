@@ -5,7 +5,7 @@ const Category = db.categories;
 const User = db.users;
 const Sound = db.sounds;
 
-exports.create = async (req, res) => {
+exports.create = async (req, res, next) => {
 	const t = await db.sequelize.transaction();
 	try {
 		const boardId = req.params.soundBoardId;
@@ -18,7 +18,7 @@ exports.create = async (req, res) => {
 			},
 			{ transaction: t }
 		);
-		if (!sboard) throw new Error("AAA");
+		if (!sboard) throw new Error();
 		const category = await Category.create(
 			{
 				board_id: boardId,
@@ -32,13 +32,12 @@ exports.create = async (req, res) => {
 			`/soundboards/${boardId}/categories/${category.category_id}`
 		);
 	} catch (err) {
-		console.log(err);
 		await t.rollback();
-		res.status(500).send();
+		next(err);
 	}
 };
 
-exports.index = (req, res) => {
+exports.index = (req, res, next) => {
 	SoundBoard.findOne({
 		where: {
 			board_id: req.params.soundBoardId,
@@ -56,20 +55,19 @@ exports.index = (req, res) => {
 	})
 		.then((sboard) => {
 			if (!sboard) {
-				return res.send("waley");
+				return res.send("Category not found");
 			}
-			// res.json(sboard);
-			console.log(sboard);
 			res.render("category", {
 				sboard: sboard,
+				isOp: sboard.user_id == req.user.user_id,
 			});
 		})
 		.catch((err) => {
-			res.send(err);
+			next(err);
 		});
 };
 
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
 	Category.update(
 		{
 			name: req.body.name,
@@ -99,8 +97,7 @@ exports.update = (req, res) => {
 			res.redirect("back");
 		})
 		.catch((err) => {
-			res.send("hoy");
-			console.log(err);
+			next(err);
 		});
 };
 
@@ -122,12 +119,13 @@ exports.destroy = (req, res) => {
 	})
 		.then((category) => {
 			if (!category) {
-				return res.status(404).send("not found");
+				return res
+					.status(404)
+					.send("Category not found");
 			}
 			res.redirect(`/home?board=${req.params.soundBoardId}`);
 		})
 		.catch((err) => {
-			res.send("hoy");
-			console.log(err);
+			next(err);
 		});
 };

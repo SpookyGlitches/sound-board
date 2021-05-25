@@ -1,4 +1,3 @@
-// const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 
 const db = require("../models/db");
@@ -9,7 +8,7 @@ const SoundBoard = db.boards;
 exports.create = [
 	canModify,
 	handleSoundUpload,
-	(req, res) => {
+	(req, res, next) => {
 		Sound.create({
 			category_id: req.params.categoryId,
 			label: req.body.label,
@@ -20,10 +19,10 @@ exports.create = [
 				if (!sound) {
 					return res.send("error");
 				}
-				return res.redirect("back");
+				res.redirect("back");
 			})
 			.catch((err) => {
-				return res.status(500).send();
+				next(err);
 			});
 	},
 ];
@@ -40,14 +39,14 @@ exports.getOne = (req, res) => {
 			else res.json(sound);
 		})
 		.catch((err) => {
-			res.status(400).send();
+			res.status(500).send();
 		});
 };
 
 exports.update = [
 	canModify,
 	handleSoundUpload,
-	async (req, res) => {
+	async (req, res, next) => {
 		try {
 			const sboard = await SoundBoard.findOne({
 				where: {
@@ -55,7 +54,14 @@ exports.update = [
 					board_id: req.params.soundBoardId,
 				},
 			});
-			if (!sboard) throw new Error();
+			if (!sboard) {
+				req.flash("errors", [
+					{
+						msg: "Cannot find the sound to update.",
+					},
+				]);
+				return res.redirect("back");
+			}
 			let obj = {
 				label: req.body.label,
 				description: req.body.description,
@@ -74,9 +80,7 @@ exports.update = [
 			);
 			res.redirect("back");
 		} catch (err) {
-			res.send(
-				`Not found ${req.params.soundBoardId} and ${req.params.soundId}`
-			);
+			next(err);
 		}
 	},
 ];
@@ -91,18 +95,24 @@ exports.destroy = [
 			},
 		})
 			.then((sound) => {
-				if (!sound) throw new Error();
+				if (!sound) {
+					req.flash("errors", [
+						{
+							msg: "Cannot find the sound to delete.",
+						},
+					]);
+				} else {
+					req.flash(
+						"success",
+						"Successfully deleted the sound."
+					);
+				}
 				//sequelize only returns the number of rows deleted, bruh.
 				// fs.unlinkSync("./public/sounds/" + sound.file);
-				req.flash(
-					"success",
-					"Successfully deleted the sound."
-				);
 				res.redirect("back");
 			})
 			.catch((err) => {
-				console.log(err);
-				res.send("Something went wrong");
+				next(err);
 			});
 	},
 ];
@@ -116,12 +126,14 @@ function canModify(req, res, next) {
 	})
 		.then((sboard) => {
 			if (!sboard) {
-				throw new Error();
+				return res
+					.status(404)
+					.send("Cannot find the sound board");
 			}
 			next();
 		})
 		.catch((err) => {
-			return res.status(403).send("Unauthorized access");
+			next(err);
 		});
 }
 
@@ -135,13 +147,13 @@ function handleSoundUpload(req, res, next) {
 				next();
 			})
 			.catch((err) => {
-				return res.status(500).send();
+				next(err);
 			});
 	} else {
 		if (!req.params.soundId) {
-			return res.send("Upload a file");
+			req.flash("errors", [{ msg: "Upload a sound file." }]);
+			res.redirect("back");
 		} else {
-			console.log("here");
 			next();
 		}
 	}

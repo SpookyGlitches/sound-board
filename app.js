@@ -6,6 +6,14 @@ const session = require("express-session");
 const passport = require("./config/passport");
 const flash = require("connect-flash");
 
+const authRouter = require("./routes/auth");
+const homeRouter = require("./routes/home");
+const svboardsRouter = require("./routes/savedBoards");
+const sboardsRouter = require("./routes/soundBoards");
+
+const isAuthenticated = require("./middlewares/isAuthenticated");
+const handleError = require("./middlewares/handleError");
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -29,13 +37,18 @@ app.use(function (req, res, next) {
 	next();
 });
 
-app.use("/static", express.static("public"));
+app.get("/", (req, res) => res.redirect("/home"));
 
-app.use("/auth", require("./routes/auth"));
-app.use("/home", require("./routes/home"));
-app.use("/savedboards", require("./routes/savedBoards"));
-app.use("/soundboards", require("./routes/soundBoards"));
-app.use("/test", require("./routes/test"));
+app.use("/static", express.static("public"));
+app.use("/auth", authRouter);
+
+app.use(isAuthenticated);
+
+app.use("/home", homeRouter);
+app.use("/savedboards", svboardsRouter);
+app.use("/soundboards", sboardsRouter);
+
+app.use(handleError);
 
 app.listen(port, () => {
 	console.log(`App listening in ${port}`);

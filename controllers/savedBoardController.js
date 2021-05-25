@@ -2,7 +2,7 @@ const db = require("../models/db");
 const SavedBoard = db.saved_boards;
 const SoundBoard = db.boards;
 
-exports.index = async (req, res) => {
+exports.index = async (req, res, next) => {
 	try {
 		const savedBoards = await SavedBoard.findAll({
 			where: {
@@ -17,12 +17,11 @@ exports.index = async (req, res) => {
 		});
 		res.json(savedBoards);
 	} catch (err) {
-		console.log(err);
-		res.status(500).send();
+		next(err);
 	}
 };
 
-exports.create = async (req, res) => {
+exports.create = async (req, res, next) => {
 	try {
 		const svboards = await SavedBoard.findOne({
 			where: {
@@ -31,15 +30,16 @@ exports.create = async (req, res) => {
 			},
 		});
 		if (svboards && svboards.length != 0) {
-			throw new Error("Existing");
+			req.flash("error", "Sound board is already saved.");
+		} else {
+			req.flash("success", "Saved!");
 		}
 		await SavedBoard.create({
 			user_id: req.user.user_id,
 			board_id: req.params.soundBoardId,
 		});
-		req.flash("success", "Saved!");
 		res.redirect("back");
 	} catch (err) {
-		res.send(err);
+		next(err);
 	}
 };

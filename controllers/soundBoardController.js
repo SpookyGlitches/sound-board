@@ -5,7 +5,8 @@ const db = require("../models/db");
 const SoundBoard = db.boards;
 const SavedBoard = db.saved_boards;
 
-exports.index = async (req, res) => {
+exports.index = async (req, res, next) => {
+	// i should've just used the sequelize pagination for this
 	let offset = req.query.offset || 0;
 	let filter = req.query.filter || "_%";
 	try {
@@ -29,15 +30,13 @@ exports.index = async (req, res) => {
 		});
 		res.render("explore", { sboards: sboards, offset: offset });
 	} catch (err) {
-		console.error(err);
-		res.send("eror");
+		next(err);
 	}
 };
 
-exports.create = async (req, res) => {
+exports.create = async (req, res, next) => {
 	const t = await db.sequelize.transaction();
 	try {
-		console.log(req.body.tags);
 		const sboard = await SoundBoard.create(
 			{
 				user_id: req.user.user_id,
@@ -58,13 +57,11 @@ exports.create = async (req, res) => {
 		res.redirect("/home");
 	} catch (err) {
 		await t.rollback();
-		res.status(404).send("sorry");
+		next(err);
 	}
 };
 
-// exports.getOne = (req, res) => {};
-
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
 	SoundBoard.update(
 		{
 			name: req.body.name,
@@ -79,18 +76,12 @@ exports.update = (req, res) => {
 		}
 	)
 		.then((sboard) => {
-			if (!sboard) {
-				res.status(404).send("Unable to update row");
-			} else {
-				res.redirect(
-					"/home?board=" + req.params.soundBoardId
-				);
-			}
+			res.redirect("/home?board=" + req.params.soundBoardId);
 		})
-		.catch((err) => res.status(500).send("boom"));
+		.catch((err) => next(err));
 };
 
-exports.getCreateEditPage = (req, res) => {
+exports.getCreateEditPage = (req, res, next) => {
 	if (req.params.soundBoardId) {
 		//this is an edit
 		SoundBoard.findOne({
@@ -101,16 +92,18 @@ exports.getCreateEditPage = (req, res) => {
 		})
 			.then((sboard) => {
 				if (!sboard) {
-					throw new Error();
+					res.status(404).send(
+						"Cannot find the soundboard."
+					);
 				} else {
-					return res.render("create", {
+					res.render("create", {
 						sboard: sboard,
 						title: "Edit",
 					});
 				}
 			})
 			.catch((err) => {
-				return res.status(404).send();
+				next(err);
 			});
 	} else {
 		//this is a create
@@ -126,10 +119,10 @@ exports.getCreateEditPage = (req, res) => {
 	}
 };
 
-exports.destroy = (req, res) => {
+exports.destroy = (req, res, next) => {
 	const boardId = parseInt(req.params.soundBoardId);
 	if (typeof boardId != "number") {
-		return res.status(400).send();
+		return res.status(400).send("Bad request!");
 	}
 	SoundBoard.destroy({
 		where: {
@@ -139,12 +132,13 @@ exports.destroy = (req, res) => {
 	})
 		.then((board) => {
 			if (!board) {
-				res.status(404).send("404");
+				res.status(404).send(
+					"Cannot find sound board to delete."
+				);
 			}
 			res.redirect("/home");
 		})
 		.catch((err) => {
-			console.log(err);
-			res.status(500).send("idk");
+			next(err);
 		});
 };

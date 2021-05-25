@@ -2,16 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const sboard = require("../controllers/soundBoardController");
+
 const validate = require("../validations/mw");
 const soundBoardValidation = require("../validations/soundBoard");
 
-router.use((req, res, next) => {
-	if (req.isAuthenticated()) {
-		next();
-	} else {
-		res.redirect("/auth/signin");
-	}
-});
+const categoriesRouter = require("./categories");
+const commentsRouter = require("./comments");
 
 router.get("/", sboard.index);
 
@@ -29,8 +25,8 @@ router.get("/:soundBoardId/edit", sboard.getCreateEditPage);
 
 router.post("/:soundBoardId/delete", sboard.destroy);
 
-router.use("/:soundBoardId/categories", require("./categories"));
+router.use("/:soundBoardId/categories", categoriesRouter);
 
-router.use("/:soundBoardId/comments", require("./comments"));
+router.use("/:soundBoardId/comments", commentsRouter);
 
 module.exports = router;

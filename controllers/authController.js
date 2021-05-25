@@ -1,12 +1,12 @@
 require("dotenv").config();
 
 const bcrypt = require("bcrypt");
-const db = require("../models/db");
-const { Op, DataTypes } = require("sequelize");
-const User = db.users;
+const { Op } = require("sequelize");
 const passport = require("passport");
-const mailgun = require("mailgun-js");
 const { v4: uuidv4 } = require("uuid");
+
+const db = require("../models/db");
+const User = db.users;
 
 exports.getLoginPage = (req, res) => {
 	res.render("signIn", { error: req.flash("error") });
@@ -67,34 +67,3 @@ exports.signup = async (req, res, next) => {
 		next(err);
 	}
 };
-
-// const mg = mailgun({
-// 	apiKey: process.env.MAIL_API_KEY,
-// 	domain: process.env.DOMAIN_NAME,
-// });
-// const data = {
-// 	from: `SoundBoard <welcome@${process.env.DOMAIN_NAME}>`,
-// 	to: newUser.display_name,
-// 	subject: "Email verification",
-// 	text: `Hi ${newUser.display_name}👋, verify your account throught this link. http://localhost:8080/auth/verify/${user.token} `,
-// };
-// mg.messages().send(
-// 	data,
-// 	function (error, body) {
-// 		if (error) {
-// 			req.flash(
-// 				"message",
-// 				"Sorry, an error occured in sending your email."
-// 			);
-// 			res.redirect("back");
-// 		} else {
-// 			req.flash(
-// 				"message",
-// 				"We've sent you an email to verify your account. It may take a few minutess."
-// 			);
-// 			res.redirect(
-// 				"/auth/signin"
-// 			);
-// 		}
-// 	}
-// );

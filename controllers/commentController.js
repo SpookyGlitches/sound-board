@@ -1,7 +1,7 @@
 const db = require("../models/db");
 const Comment = db.comments;
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
 	Comment.create({
 		user_id: req.user.user_id,
 		board_id: req.params.soundBoardId,
@@ -12,13 +12,13 @@ exports.create = (req, res) => {
 				req.flash("errors", {
 					msg: "Unable to create comment.",
 				});
+			} else {
+				req.flash("success", "Successfully commented.");
 			}
-			req.flash("success", "Successfully commented.");
 			res.redirect("back");
 		})
 		.catch((err) => {
-			console.log(err);
-			res.status(500).send("idk man");
+			next(err);
 		});
 };
 
@@ -30,7 +30,6 @@ exports.destroy = (req, res) => {
 		},
 	})
 		.then((comment) => {
-			if (!comment) throw new Error();
 			req.flash(
 				"success",
 				"Successfully deleted the comment."
@@ -38,7 +37,6 @@ exports.destroy = (req, res) => {
 			res.redirect("back");
 		})
 		.catch((err) => {
-			console.log(err);
-			res.status(404).send("uh oh");
+			next(err);
 		});
 };

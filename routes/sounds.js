@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router({
 	mergeParams: true,
 });
+
 const sound = require("../controllers/soundController");
+
 const validate = require("../validations/mw");
 const soundValidation = require("../validations/sound");
 

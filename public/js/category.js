@@ -38,6 +38,7 @@ function changeModalDetails(event) {
 			modal.show();
 		})
 		.catch((err) => {
+			console.log(err);
 			alert("Error in retrieving sound");
 		});
 }

@@ -3,7 +3,7 @@ document.getElementById("file").addEventListener("change", validateFile);
 function validateFile(event) {
 	const extensions = [".mp3", ".ogg", ".wav"];
 	let btn = document.getElementById("submit");
-	btn.disabled = false;
+	btn.disabled = true;
 	if (!hasExtension(extensions, event.target)) {
 		event.target.value = null;
 		alert("Supported files are " + extensions.toString() + ".");
@@ -17,6 +17,13 @@ function validateFile(event) {
 				"durationchange",
 				function () {
 					alert(audio.duration);
+					if (audio.duration > 30) {
+						alert(
+							"Only sound clips of <= 30 seconds are allowed."
+						);
+					} else {
+						btn.disabled = false;
+					}
 				},
 				false
 			);
