@@ -20,6 +20,10 @@ document.getElementById("addTagButton").addEventListener("click", (event) => {
 	if (val.length == 0 || tags.includes(val)) {
 		return;
 	}
+	if (val.length > 16) {
+		alert("Limit tags to 16 characters");
+		return;
+	}
 	tags.push(val);
 	createTag(val);
 });
@@ -39,6 +43,10 @@ function deleteTag(event) {
 }
 
 function onFormSubmit() {
+	if (tags.length <= 0) {
+		alert("Tags must not be empty");
+		return false;
+	}
 	document.getElementById("tags").value = tags.toString();
 	return true;
 }

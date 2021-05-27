@@ -36,7 +36,7 @@ function createSvboardLink(svboards) {
 	container.innerHTML = "";
 	for (x = 0; x < svboards.length; x++) {
 		let div = document.createElement("div");
-		div.classList.add("overflow-hidden", "mb-1");
+		div.classList.add("text-break", "mb-1");
 
 		let a = document.createElement("a");
 		a.classList.add("text-decoration-none");

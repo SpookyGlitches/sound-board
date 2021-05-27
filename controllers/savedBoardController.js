@@ -30,7 +30,9 @@ exports.create = async (req, res, next) => {
 			},
 		});
 		if (svboards && svboards.length != 0) {
-			req.flash("error", "Sound board is already saved.");
+			req.flash("errors", [
+				{ msg: "Sound board is already saved." },
+			]);
 		} else {
 			req.flash("success", "Saved!");
 		}
@@ -42,4 +44,28 @@ exports.create = async (req, res, next) => {
 	} catch (err) {
 		next(err);
 	}
+};
+
+exports.destroy = (req, res, next) => {
+	SavedBoard.destroy({
+		where: {
+			user_id: req.user.user_id,
+			board_id: req.params.soundBoardId,
+		},
+	})
+		.then((svboard) => {
+			if (!svboard)
+				req.flash("errors", [
+					{
+						msg: "Unable to remove from sound board.",
+					},
+				]);
+			else
+				req.flash(
+					"success",
+					"Successfully removed from your saved boards."
+				);
+			res.redirect("back");
+		})
+		.catch(next);
 };

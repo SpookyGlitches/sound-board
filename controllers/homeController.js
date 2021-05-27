@@ -9,7 +9,6 @@ const Comment = db.comments;
 
 exports.get = async (req, res, next) => {
 	try {
-		console.log("here");
 		let boardId = req.query.board;
 		let obj = { isSaved: true, user_id: req.user.user_id };
 		if (!boardId) {

@@ -9,11 +9,12 @@
 <body>
     <div class="container-fluid">
         <div class="row min-vh-100">
-            <div class="col-md bg-dark text-white">
+            <div class="col-md d-flex align-items-center justify-content-center bg-dark">
+                <%- include("./partials/intro") %>
             </div>
-            <div class="col-md d-flex justify-content-center align-items-center">
-                <div class="" style="max-width: 30rem;">
-                    <h1 class="fw-bolder">Create an account</h1>
+            <div class="py-4 col-md d-flex justify-content-center align-items-center">
+                <div class="" style="width:20rem">
+                    <h2 class="fw-bolder">Create an account</h2>
                     <p>Hey, it's free! 😉</p>
                     <div class="mt-4">
                         <%- include("./partials/error")%>
@@ -22,29 +23,29 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label fw-bold">Email addresss</label>
                                 <div class="">
-                                    <input type="text" name="email_address" class="form-control form-control-sm" id="">
+                                    <input type="text" name="email_address" class="form-control form-control-sm" id="" required>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="displayName" class="form-label fw-bold">Display name</label>
                                 <div class="">
-                                    <input type="text" name="display_name" class="form-control form-control-sm" id="">
+                                    <input type="text" name="display_name" class="form-control form-control-sm" id="" required minlength="2" maxlength="20">
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label fw-bold">Password</label>
                                 <div class="">
-                                    <input type="password" name="password" class="form-control form-control-sm" id="">
+                                    <input type="password" name="password" class="form-control form-control-sm" id="" required minlength="8">
                                 </div>
                             </div>
                             <div class="mb-4">
                                 <label for="confirmPassword" class="form-label fw-bold">Confirm Password</label>
                                 <div class="">
-                                    <input type="password" name="confirm_password" class="form-control form-control-sm" id="">
+                                    <input type="password" name="confirm_password" class="form-control form-control-sm" id="" required minlength="8">
                                 </div>
                             </div>
                             <div class="d-grid mb-3">
-                                <button class="btn btn-sm btn-primary" type="submit">Sign up</button>
+                                <button class="btn btn-sm btn-dark" type="submit">Sign up</button>
                             </div>
                         </form>
                         <div class="mb-4 d-flex flex-column justify-content-center align-items-center">

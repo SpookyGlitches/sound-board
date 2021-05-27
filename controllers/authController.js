@@ -46,11 +46,19 @@ exports.signup = async (req, res, next) => {
 			},
 		});
 		if (user) {
-			req.flash("errors", [
-				{
-					msg: "A user exists with the email address or with the display name",
-				},
-			]);
+			if (user.display_name == req.body.display_name) {
+				req.flash("errors", [
+					{
+						msg: "The display name already exists. Try another one.",
+					},
+				]);
+			} else {
+				req.flash("errors", [
+					{
+						msg: "A user exists with that email address.",
+					},
+				]);
+			}
 			return res.redirect("back");
 		}
 		User.create({

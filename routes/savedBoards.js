@@ -10,6 +10,6 @@ router.post("/create/:soundBoardId", svboard.create);
 
 router.get("/", svboard.index);
 
-// router.post("/:savedBoardId/delete", svboard.destroy);
+router.post("/delete/:soundBoardId", svboard.destroy);
 
 module.exports = router;

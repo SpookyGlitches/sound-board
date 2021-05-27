@@ -7,8 +7,7 @@
     <title>Explore</title>
 </head>
 <body>
-    <%- include('./partials/navbar.ejs')%>
-
+    <%- include('./partials/navbar.ejs',{active:'explore'}) %>
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-lg-2">
@@ -26,7 +25,7 @@
                     </div>
                     <div class="col-sm-2">
                         <div class="w-100">
-                            <button class="btn btn-primary w-100 btn-sm">
+                            <button class="btn btn-dark w-100 btn-sm">
                                   Search
                             </button>
                         </div>
@@ -34,7 +33,7 @@
                 </form>
                 <div id="searchResults" class="py-4">
                     <% for( let index = 0; index < sboards.length; index++ ) { %>
-                        <a href="/home?board=<%=sboards[index].board_id%>" target="_blank" class="text-decoration-none text-dark">
+                        <a href="/home?board=<%=sboards[index].board_id%>" class="text-decoration-none text-dark">
                         <div class="card mb-3   ">
                             <div class="card-body">
                                     <%- include('./partials/soundBoardHeader.ejs',
@@ -52,12 +51,12 @@
                 </div>
                 <div class="d-flex gap-3 justify-content-center">
                     <% if (offset && offset !=0 ) { %>
-                        <a class="btn btn-primary btn-sm " href="/soundboards?offset=<%=(parseInt(offset) -5) || 0%>" role="button" style="min-width:5rem;"> 
+                        <a class="btn btn-outline-dark btn-sm " href="/soundboards?offset=<%=(parseInt(offset) -5) || 0%>" role="button" style="min-width:5rem;"> 
                             Previous
                         </a> 
                     <% } %>
                     <% if (sboards.length >= 5) { %>
-                        <a class="btn btn-primary btn-sm" href="/soundboards?offset=<%=(parseInt(offset) + 5) || 0%>" role="button" style="min-width:5rem;"> 
+                        <a class="btn btn-outline-dark btn-sm" href="/soundboards?offset=<%=(parseInt(offset) + 5) || 0%>" role="button" style="min-width:5rem;"> 
                             Next
                         </a>                     
                     <% } %>

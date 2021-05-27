@@ -16,9 +16,10 @@ function changeModalDetails(event) {
 	);
 
 	let target = event.currentTarget;
+
 	if (target.dataset.action == "add") {
 		desc.value = "";
-		label.value = "";
+		label.value = " ";
 		form.action = route + "/create";
 		soundTitle.textContent = "Add sound";
 		modal.show();
@@ -38,7 +39,6 @@ function changeModalDetails(event) {
 			modal.show();
 		})
 		.catch((err) => {
-			console.log(err);
 			alert("Error in retrieving sound");
 		});
 }

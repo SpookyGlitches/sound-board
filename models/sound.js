@@ -22,7 +22,7 @@ module.exports = function (sequelize, DataTypes) {
 			},
 			description: {
 				type: DataTypes.STRING,
-				allowNull: false,
+				allowNull: true,
 			},
 			file: {
 				type: DataTypes.STRING,

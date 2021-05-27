@@ -7,7 +7,7 @@
     <title><%=title%></title>
 </head>
 <body>
-    <%- include('./partials/navbar.ejs')%>
+    <%- include('./partials/navbar.ejs',{active:'create'}) %>
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-md-2">
@@ -22,43 +22,46 @@
                     <input type="hidden" name="board_id" value="<%=sboard.board_id%>">
                     <div class="mb-3">
                         <label for="name" class="form-label fw-bold" >Name/Title</label>
-                        <input type="text" name="name" value="<%= sboard.name %>" class="form-control form-control-sm" id="" placeholder="ex. Dota Voice Lines">
+                        <input type="text" name="name" value="<%= sboard.name %>" class="form-control form-control-sm" id="" placeholder="ex. Dota Voice Lines" minlength="1" maxlength="32" required>
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label fw-bold" >Description</label>
-                        <input type="text" class="form-control form-control-sm" value="<%=sboard.description%>" name="description" id="" placeholder="Voice lines found in the video game Defense of the Ancients 2">
+                        <textarea name="description" maxlength="128" class="form-control form-control-sm" id="" cols="30" rows="3"><%= sboard.description %></textarea>
+                        <div class="form-text">
+                            Maximum length of 128 characters.
+                        </div>
                     </div>
                     <div class="mb-4">
                         <label for="tags" class="form-label fw-bold" >Tags</label><br>
                         <div class="row gap-1">
                             <div class="col-md-10 ">
-                                <input type="text" id="tagsField" name="" class="form-control form-control-sm" name="" id="">
+                                <input type="text" id="tagsField" name="" class="form-control form-control-sm" name="" id="" maxlength="16">
                             </div>
                             <div class="col">
-                                <button type="button" id="addTagButton" class="btn btn-primary btn-sm w-100 ">
+                                <button type="button" id="addTagButton" class="btn btn-outline-dark btn-sm w-100 ">
                                     Add
                                 </button>
                             </div>                            
                         </div>
                         <input type="hidden" name="tags" id="tags">
-                        <small class="text-muted mb-1">Click on a tag to remove it</small>
+                        <div class="form-text">Click on a tag to remove it.</div>
                         <div id="tagsContainer" class="">
                             <% let tags = sboard.tags === null ? [] : sboard.tags.split(',') %>
                             <% for( let index = 0; index < tags.length; index++ ) { %>
-                                <button type="button" class="btn btn-sm btn-light mb-1 tag" ><%= tags[index] %></button>
+                                <button type="button" class="btn btn-light btn-sm mb-1 tag" ><%= tags[index] %></button>
                             <% } %>
 
                         </div>
                     </div>
                     <div class="mb-4 d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary btn-sm"><%= title %> board</button>
+                        <button type="submit" class="btn btn-dark btn-sm"><%= title %> board</button>
                     </div>
                 </form>
                 <% if (title == 'Edit') { %>
                     <form action="/soundboards/<%=sboard.board_id%>/delete" method="post" onsubmit="return confirm('All categories, comments, and sounds will be lost. Proceed?')">
                         <div class="d-flex justify-content-start">
                             <small>
-                                <button type="submit" class="btn btn-light btn-sm d-flex delete-btn">Delete</button>
+                                <button type="submit" class="btn btn-outline-dark btn-sm d-flex delete-btn">Delete</button>
                             </small>
 
                         </div>

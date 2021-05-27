@@ -6,13 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Category</title>
+    <% include("./partials/icon.ejs") %> 
 </head>
 <body>
-    <%- include('./partials/navbar.ejs') %>
+    <%- include('./partials/navbar.ejs',{active:''}) %>
         <div class="container py-4">
-            <div class="pb-3 mb-3 border-bottom" >
+            <div class="pb-3 mb-3 border-bottom text-truncate" >
                 <%- include('./partials/error.ejs') %>
                 <%- include('./partials/success.ejs') %>
+                <a href="/home?board=<%= sboard.board_id %>" class="text-decoration-none" >Back to the sound board</a>
                 <h1 class="fw-bolder"><%=sboard.categories[0].name%></h1>
                 <div class="row">
                     <div class="col-lg-10">
@@ -30,16 +32,16 @@
             <% if (isOp) { %>
                 <div class="d-flex gap-2 d-flex justify-content-between" id='soundBoardOptions'>
                     <div class="">
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCategoryModal">
+                        <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#editCategoryModal">
                             Edit
                         </button>
-                        <button type="button" data-action="add" id="" class="btn btn-primary btn-sm sound-button-modal" data-bs-toggle="modal"
+                        <button type="button" data-action="add" id="" class="btn btn-dark btn-sm sound-button-modal" data-bs-toggle="modal"
                             >
                             Add sound
                         </button>
                     </div>
                     <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/delete" method="post" onsubmit="return confirm('This category and its asssociated sounds will be deleted. Proceed? ')">
-                        <button type="submit" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                        <button type="submit" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal"
                         data-bs-target="#deleteCategoryModal">
                         Delete
                     </button>            
@@ -97,7 +99,7 @@
                         <label for="" class="form-label fw-bold">
                             Name
                         </label>
-                        <input type="text" name="name" value=" <%= sboard.categories[0].name %> "class="form-control form-control-sm" id="" placeholder="">
+                        <input type="text" name="name" value="<%= sboard.categories[0].name %>" class="form-control form-control-sm" id="" placeholder="" minlength="1" maxlength="32" required>
                 </div>
                     <div class="mb-3">
                         <label for="" class="form-label fw-bold">
@@ -106,10 +108,10 @@
                         <input type="text" name="description"value="<%= sboard.categories[0].description%>" class="form-control form-control-sm" id="" placeholder="">
                     </div>
                     <div class="d-flex justify-content-end gap-2">
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-outline-dark btn-sm" data-bs-dismiss="modal">
                             Close
                         </button>
-                        <input class="btn btn-primary btn-sm" type="submit" value="Create" />
+                        <input class="btn btn-dark btn-sm" type="submit" value="Create" />
                     </div>
                 </form>
               </div>
@@ -126,19 +128,19 @@
                     <form data-sboardid="<%= sboard.board_id %>" data-catid='<%= sboard.categories[0].category_id %>' action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/sounds/create"  method="post" id="form" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="label" class="form-label fw-bold">Label</label>
-                            <input type="text" id="sound-label" name="label" class="form-control form-control-sm" id="" placeholder="">
+                            <input type="text" value="" id="sound-label" name="label" class="form-control form-control-sm" id="" placeholder="" maxlength="64" value="" required>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label fw-bold">Description</label>
-                            <input type="text" name="description" id="sound-description" class="form-control form-control-sm" id="" placeholder="">
+                            <input type="text" name="description" id="sound-description" class="form-control form-control-sm" id="" placeholder=""  maxlength="128 ">
                         </div>
                         <div class="mb-3">
                             <label for="sound-file" class="form-label fw-bold">Sound file</label>
                             <input class="form-control form-control-sm" id="file" type="file" name="sound">
                         </div>
                         <div class="mb-2 d-flex gap-2 justify-content-end">
-                            <button class="btn btn-primary btn-sm" type="button" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary btn-sm" type="submit" id="submit">Submit</button>
+                            <button class="btn btn-outline-dark btn-sm" type="button" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-dark btn-sm" type="submit" id="submit">Submit</button>
                         </div>
                     </form>              
                </div>
