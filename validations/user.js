@@ -17,8 +17,6 @@ const signup = [
 		),
 	body("confirm_password")
 		.custom((value, { req }) => {
-			console.log(value);
-			console.log(req.body.password);
 			return value === req.body.password;
 		})
 		.withMessage("Passwords do not match"),

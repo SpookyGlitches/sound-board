@@ -78,6 +78,7 @@ exports.updatePass = async (req, res, next) => {
 				},
 			}
 		);
+		req.flash("success", "Updated password.");
 		res.redirect("back");
 	} catch (err) {
 		next(err);
