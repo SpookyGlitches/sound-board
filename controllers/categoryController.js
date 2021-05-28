@@ -45,6 +45,9 @@ exports.index = (req, res, next) => {
 		include: [
 			{
 				model: Category,
+				where: {
+					category_id: req.params.categoryId,
+				},
 				include: [
 					{
 						model: Sound,
