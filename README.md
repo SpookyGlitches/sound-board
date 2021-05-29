@@ -34,4 +34,4 @@ That's 2 websites to visit and I don't want that. I also want it to be dynamic a
       node app
       ```
 
-Still has some work to doooo.
+You check the demo video [here](https://github.com/SpookyGlitches/sound-board/blob/main/public/vid/demo.md).
