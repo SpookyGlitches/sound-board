@@ -11,6 +11,7 @@ exports.get = async (req, res, next) => {
 	try {
 		let boardId = req.query.board;
 		let obj = { isSaved: true, user_id: req.user.user_id };
+		let sequelize = db.sequelize;
 		if (!boardId) {
 			//get one in saved boards since no queried board id
 			let svboard = await SavedBoard.findOne({
@@ -30,21 +31,14 @@ exports.get = async (req, res, next) => {
 			include: [
 				{
 					model: User,
-					attributes: [
-						"display_name",
-						"user_id",
-						"email_address",
-					],
+					attributes: ["display_name", "user_id", "email_address"],
 				},
 				{
 					model: Comment,
 					include: [
 						{
 							model: User,
-							attributes: [
-								"display_name",
-								"user_id",
-							],
+							attributes: ["display_name", "user_id"],
 						},
 					],
 				},
@@ -59,9 +53,7 @@ exports.get = async (req, res, next) => {
 			],
 		});
 		if (!obj.sboard)
-			return res
-				.status(404)
-				.send("Cannot find the sound board.");
+			return res.status(404).send("Cannot find the sound board.");
 		obj.isOp = obj.user_id == obj.sboard.user_id;
 		// diz bad code huhuhu
 		if (!obj.isOp) {

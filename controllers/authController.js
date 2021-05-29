@@ -35,12 +35,10 @@ exports.signup = async (req, res, next) => {
 			where: {
 				[Op.or]: [
 					{
-						display_name:
-							req.body.display_name,
+						display_name: req.body.display_name,
 					},
 					{
-						email_address:
-							req.body.email_address,
+						email_address: req.body.email_address,
 					},
 				],
 			},
@@ -61,16 +59,14 @@ exports.signup = async (req, res, next) => {
 			}
 			return res.redirect("back");
 		}
-		User.create({
+		await User.create({
 			display_name: req.body.display_name,
 			email_address: req.body.email_address,
 			password: bcrypt.hashSync(req.body.password, 10),
 			token: uuidv4(),
-		})
-			.then((newUser) => {
-				res.redirect("/auth/signin");
-			})
-			.catch((err) => next(err));
+		});
+		req.flash("success", "Account created!");
+		res.redirect("/auth/signin");
 	} catch (err) {
 		next(err);
 	}

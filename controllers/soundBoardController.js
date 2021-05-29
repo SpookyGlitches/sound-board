@@ -54,7 +54,7 @@ exports.create = async (req, res, next) => {
 			{ transaction: t }
 		);
 		await t.commit();
-		res.redirect("/home");
+		res.redirect("/home?board=" + sboard.board_id);
 	} catch (err) {
 		await t.rollback();
 		next(err);
@@ -92,9 +92,7 @@ exports.getCreateEditPage = (req, res, next) => {
 		})
 			.then((sboard) => {
 				if (!sboard) {
-					res.status(404).send(
-						"Cannot find the soundboard."
-					);
+					res.status(404).send("Cannot find the soundboard.");
 				} else {
 					res.render("create", {
 						sboard: sboard,
@@ -120,21 +118,15 @@ exports.getCreateEditPage = (req, res, next) => {
 };
 
 exports.destroy = (req, res, next) => {
-	const boardId = parseInt(req.params.soundBoardId);
-	if (typeof boardId != "number") {
-		return res.status(400).send("Bad request!");
-	}
 	SoundBoard.destroy({
 		where: {
-			board_id: boardId,
+			board_id: req.params.soundBoardId,
 			user_id: req.user.user_id,
 		},
 	})
 		.then((board) => {
 			if (!board) {
-				res.status(404).send(
-					"Cannot find sound board to delete."
-				);
+				res.status(404).send("Cannot find sound board to delete.");
 			}
 			res.redirect("/home");
 		})

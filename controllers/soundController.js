@@ -16,18 +16,13 @@ exports.create = [
 			file: req.body.sound,
 		})
 			.then((sound) => {
-				if (!sound) {
-					return res.send("error");
-				}
 				res.redirect("back");
 			})
-			.catch((err) => {
-				next(err);
-			});
+			.catch(next);
 	},
 ];
 
-exports.getOne = (req, res) => {
+exports.getOne = (req, res, next) => {
 	Sound.findOne({
 		where: {
 			sound_id: req.params.soundId,
@@ -38,9 +33,7 @@ exports.getOne = (req, res) => {
 			if (!sound) res.status(404).send();
 			else res.json(sound);
 		})
-		.catch((err) => {
-			res.status(500).send();
-		});
+		.catch(next);
 };
 
 exports.update = [
@@ -74,10 +67,7 @@ exports.update = [
 					sound_id: req.params.soundId,
 				},
 			});
-			req.flash(
-				"success",
-				"Successfully updated sound details."
-			);
+			req.flash("success", "Successfully updated sound details.");
 			res.redirect("back");
 		} catch (err) {
 			next(err);
@@ -102,10 +92,7 @@ exports.destroy = [
 						},
 					]);
 				} else {
-					req.flash(
-						"success",
-						"Successfully deleted the sound."
-					);
+					req.flash("success", "Successfully deleted the sound.");
 				}
 				//sequelize only returns the number of rows deleted, bruh.
 				// fs.unlinkSync("./public/sounds/" + sound.file);
@@ -126,9 +113,7 @@ function canModify(req, res, next) {
 	})
 		.then((sboard) => {
 			if (!sboard) {
-				return res
-					.status(404)
-					.send("Cannot find the sound board");
+				return res.status(404).send("Cannot find the sound board");
 			}
 			next();
 		})
@@ -141,7 +126,8 @@ function handleSoundUpload(req, res, next) {
 	if (req.files && req.files.length != 0) {
 		const sound = req.files.sound;
 		const fileName = uuidv4() + sound.name;
-		sound.mv("./public/sounds/" + fileName)
+		sound
+			.mv("./public/sounds/" + fileName)
 			.then(() => {
 				req.body.sound = fileName;
 				next();

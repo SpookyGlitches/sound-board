@@ -10,9 +10,6 @@ exports.get = (req, res, next) => {
 		},
 	})
 		.then((user) => {
-			if (!user) {
-				return res.status(403).send();
-			}
 			res.render("profile", {
 				email_address: user.email_address,
 				display_name: user.display_name,
@@ -29,7 +26,7 @@ exports.updateName = async (req, res, next) => {
 			},
 		});
 		if (user && user.user_id != req.user.user_id) {
-			req.flash("error", [
+			req.flash("errors", [
 				{
 					msg: "Display name is being used by someone.",
 				},
@@ -57,20 +54,14 @@ exports.updatePass = async (req, res, next) => {
 	try {
 		const user = await User.findByPk(req.user.user_id);
 		if (!user) return res.status(403).send(); //idk what to do here
-		const result = bcrypt.compareSync(
-			req.body.old_password,
-			user.password
-		);
+		const result = bcrypt.compareSync(req.body.old_password, user.password);
 		if (!result) {
-			req.flash("error", [{ msg: "Incorrect password." }]);
+			req.flash("errors", [{ msg: "Incorrect password." }]);
 			return res.redirect("back");
 		}
 		await User.update(
 			{
-				password: bcrypt.hashSync(
-					req.body.password,
-					10
-				),
+				password: bcrypt.hashSync(req.body.password, 10),
 			},
 			{
 				where: {

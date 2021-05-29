@@ -6,33 +6,27 @@ const User = db.users;
 const Sound = db.sounds;
 
 exports.create = async (req, res, next) => {
-	const t = await db.sequelize.transaction();
 	try {
 		const boardId = req.params.soundBoardId;
-		const sboard = await SoundBoard.findOne(
-			{
-				where: {
-					user_id: req.user.user_id,
-					board_id: boardId,
-				},
-			},
-			{ transaction: t }
-		);
-		if (!sboard) throw new Error();
-		const category = await Category.create(
-			{
+		const sboard = await SoundBoard.findOne({
+			where: {
+				user_id: req.user.user_id,
 				board_id: boardId,
-				name: req.body.name,
-				description: req.body.description,
 			},
-			{ transaction: t }
-		);
-		await t.commit();
-		return res.redirect(
+		});
+		if (!sboard)
+			return res
+				.status(404)
+				.send("Cannot find sound board to create category.");
+		const category = await Category.create({
+			board_id: boardId,
+			name: req.body.name,
+			description: req.body.description,
+		});
+		res.redirect(
 			`/soundboards/${boardId}/categories/${category.category_id}`
 		);
 	} catch (err) {
-		await t.rollback();
 		next(err);
 	}
 };
@@ -58,16 +52,14 @@ exports.index = (req, res, next) => {
 	})
 		.then((sboard) => {
 			if (!sboard) {
-				return res.send("Category not found");
+				return res.status(404).send("Category not found");
 			}
 			res.render("category", {
 				sboard: sboard,
 				isOp: sboard.user_id == req.user.user_id,
 			});
 		})
-		.catch((err) => {
-			next(err);
-		});
+		.catch(next);
 };
 
 exports.update = (req, res, next) => {
@@ -85,8 +77,7 @@ exports.update = (req, res, next) => {
 				{
 					model: SoundBoard,
 					where: {
-						board_id: req.params
-							.soundBoardId,
+						board_id: req.params.soundBoardId,
 						user_id: req.user.user_id,
 					},
 				},
@@ -95,16 +86,14 @@ exports.update = (req, res, next) => {
 	)
 		.then((sboard) => {
 			if (!sboard) {
-				return res.status(404).send("not found");
+				return res.status(404).send("Cannot find category to update.");
 			}
 			res.redirect("back");
 		})
-		.catch((err) => {
-			next(err);
-		});
+		.catch(next);
 };
 
-exports.destroy = (req, res) => {
+exports.destroy = (req, res, next) => {
 	Category.destroy({
 		where: {
 			category_id: req.params.categoryId,
@@ -122,13 +111,9 @@ exports.destroy = (req, res) => {
 	})
 		.then((category) => {
 			if (!category) {
-				return res
-					.status(404)
-					.send("Category not found");
+				return res.status(404).send("Category not found");
 			}
 			res.redirect(`/home?board=${req.params.soundBoardId}`);
 		})
-		.catch((err) => {
-			next(err);
-		});
+		.catch(next);
 };

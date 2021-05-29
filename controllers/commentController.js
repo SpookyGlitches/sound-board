@@ -8,21 +8,13 @@ exports.create = (req, res, next) => {
 		content: req.body.content,
 	})
 		.then((comment) => {
-			if (!comment) {
-				req.flash("errors", {
-					msg: "Unable to create comment.",
-				});
-			} else {
-				req.flash("success", "Successfully commented.");
-			}
+			req.flash("success", "Successfully commented.");
 			res.redirect("back");
 		})
-		.catch((err) => {
-			next(err);
-		});
+		.catch(next);
 };
 
-exports.destroy = (req, res) => {
+exports.destroy = (req, res, next) => {
 	Comment.destroy({
 		where: {
 			user_id: req.user.user_id,
@@ -30,13 +22,8 @@ exports.destroy = (req, res) => {
 		},
 	})
 		.then((comment) => {
-			req.flash(
-				"success",
-				"Successfully deleted the comment."
-			);
+			req.flash("success", "Successfully deleted the comment.");
 			res.redirect("back");
 		})
-		.catch((err) => {
-			next(err);
-		});
+		.catch(next);
 };

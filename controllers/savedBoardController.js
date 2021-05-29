@@ -30,16 +30,14 @@ exports.create = async (req, res, next) => {
 			},
 		});
 		if (svboards && svboards.length != 0) {
-			req.flash("errors", [
-				{ msg: "Sound board is already saved." },
-			]);
-		} else {
-			req.flash("success", "Saved!");
+			req.flash("errors", [{ msg: "Sound board is already saved." }]);
+			return res.redirect("back");
 		}
 		await SavedBoard.create({
 			user_id: req.user.user_id,
 			board_id: req.params.soundBoardId,
 		});
+		req.flash("success", "Saved!");
 		res.redirect("back");
 	} catch (err) {
 		next(err);
