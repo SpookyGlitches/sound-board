@@ -70,7 +70,7 @@
                                         </h5>
                                         <div class="d-flex  flex-wrap justify-content-center gap-1  ">
                                             <% for( let y = 0; y < sboard.categories[x].sounds.length; y++ ) { %>
-                                                <button class='mb-1 btn bg-light sound btn-sm text-break'  data-src="<%= sboard.categories[x].sounds[y].file %> ">
+                                                <button class='mb-1 btn bg-light sound btn-sm text-break' data-sound="<%= sboard.categories[x].sounds[y].sound_id %>" data-src="<%= sboard.categories[x].sounds[y].file %>" data-category="<%= sboard.categories[x].category_id %>" data-sboard="<%= sboard.board_id %>">
                                                     <%= sboard.categories[x].sounds[y].label %>
                                                 </button>
                                             <% } %>

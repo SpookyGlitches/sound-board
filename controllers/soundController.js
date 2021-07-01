@@ -1,7 +1,13 @@
-const { v4: uuidv4 } = require("uuid");
+require("dotenv/config");
 
+const { v4: uuidv4, v4 } = require("uuid");
+const { s3Client } = require("../config/s3Client.js"); // Helper function that creates Amazon S3 service client module.
+const {
+	PutObjectCommand,
+	GetObjectCommand,
+	DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const db = require("../models/db");
-
 const Sound = db.sounds;
 const SoundBoard = db.boards;
 
@@ -22,6 +28,19 @@ exports.create = [
 	},
 ];
 
+exports.play = async (req, res, next) => {
+	const downloadParams = {
+		Key: req.params.key,
+		Bucket: process.env.AWS_BUCKET_NAME,
+	};
+	try {
+		let data = await s3Client.send(new GetObjectCommand(downloadParams));
+		data.Body.pipe(res);
+	} catch (err) {
+		next(err);
+	}
+};
+
 exports.getOne = (req, res, next) => {
 	Sound.findOne({
 		where: {
@@ -41,20 +60,6 @@ exports.update = [
 	handleSoundUpload,
 	async (req, res, next) => {
 		try {
-			const sboard = await SoundBoard.findOne({
-				where: {
-					user_id: req.user.user_id,
-					board_id: req.params.soundBoardId,
-				},
-			});
-			if (!sboard) {
-				req.flash("errors", [
-					{
-						msg: "Cannot find the sound to update.",
-					},
-				]);
-				return res.redirect("back");
-			}
 			let obj = {
 				label: req.body.label,
 				description: req.body.description,
@@ -77,30 +82,22 @@ exports.update = [
 
 exports.destroy = [
 	canModify,
-	(req, res) => {
-		Sound.destroy({
-			where: {
-				sound_id: req.params.soundId,
-				category_id: req.params.categoryId,
-			},
-		})
-			.then((sound) => {
-				if (!sound) {
-					req.flash("errors", [
-						{
-							msg: "Cannot find the sound to delete.",
-						},
-					]);
-				} else {
-					req.flash("success", "Successfully deleted the sound.");
-				}
-				//sequelize only returns the number of rows deleted, bruh.
-				// fs.unlinkSync("./public/sounds/" + sound.file);
-				res.redirect("back");
-			})
-			.catch((err) => {
-				next(err);
+	async (req, res, next) => {
+		try {
+			const sound = await Sound.findOne({
+				where: {
+					sound_id: req.params.soundId,
+					category_id: req.params.categoryId,
+				},
 			});
+			if (!sound) return res.status(404).send();
+			await deleteAWSObject(sound.file);
+			await sound.destroy();
+			req.flash("success", "Successfully deleted.");
+			res.redirect("back");
+		} catch (err) {
+			next(err);
+		}
 	},
 ];
 
@@ -122,19 +119,31 @@ function canModify(req, res, next) {
 		});
 }
 
-function handleSoundUpload(req, res, next) {
+async function handleSoundUpload(req, res, next) {
 	if (req.files && req.files.length != 0) {
-		const sound = req.files.sound;
-		const fileName = uuidv4() + sound.name;
-		sound
-			.mv("./public/sounds/" + fileName)
-			.then(() => {
-				req.body.sound = fileName;
-				next();
-			})
-			.catch((err) => {
-				next(err);
-			});
+		//either an edit or a create
+		try {
+			let fileName;
+			if (req.params.soundId) {
+				//delete previous file since this is an edit
+				const sound = await Sound.findByPk(req.params.soundId);
+				if (!sound) return res.status(404).send();
+				await deleteAWSObject(sound.file);
+				fileName = sound.file;
+			} else {
+				fileName = generateFileName(req.files.sound.name);
+			}
+			const uploadParams = {
+				Body: req.files.sound.data,
+				Bucket: process.env.AWS_BUCKET_NAME,
+				Key: fileName,
+			};
+			await s3Client.send(new PutObjectCommand(uploadParams));
+			req.body.sound = fileName;
+			next();
+		} catch (err) {
+			next(err);
+		}
 	} else {
 		if (!req.params.soundId) {
 			req.flash("errors", [{ msg: "Upload a sound file." }]);
@@ -143,4 +152,18 @@ function handleSoundUpload(req, res, next) {
 			next();
 		}
 	}
+}
+
+async function deleteAWSObject(key) {
+	const bucketParams = {
+		Bucket: process.env.AWS_BUCKET_NAME,
+		Key: key,
+	};
+	await s3Client.send(new DeleteObjectCommand(bucketParams));
+}
+
+function generateFileName(name) {
+	const myFile = name.split(".");
+	const fileType = myFile[myFile.length - 1];
+	return v4() + "." + fileType;
 }

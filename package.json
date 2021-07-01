@@ -1,5 +1,5 @@
 {
-	"name": "voice-lines",
+	"name": "sound-board",
 	"version": "1.0.0",
 	"description": "",
 	"main": "app.js",
@@ -9,6 +9,7 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.19.0",
 		"bcrypt": "^5.0.1",
 		"connect-flash": "^0.1.1",
 		"cookie-parser": "^1.4.5",

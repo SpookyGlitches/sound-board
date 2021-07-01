@@ -28,7 +28,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(
 	fileUpload({
-		safeFileNames: true,
+		safeFileNames: false,
 	})
 );
 
@@ -53,5 +53,5 @@ app.use("/profile", profileRouter);
 app.use(handleError);
 
 app.listen(port, () => {
-	console.log(`App listening in ${port}`);
+	console.log(`App listening in http://localhost:${port}`);
 });

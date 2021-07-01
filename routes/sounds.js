@@ -12,6 +12,8 @@ router.post("/create", validate(soundValidation), sound.create);
 
 router.get("/:soundId/edit", sound.getOne);
 
+router.get("/:soundId/:key/play", sound.play);
+
 router.post("/:soundId/edit", validate(soundValidation), sound.update);
 
 router.post("/:soundId/delete", sound.destroy);
