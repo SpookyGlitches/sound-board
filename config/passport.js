@@ -17,21 +17,18 @@ passport.use(
 					email_address: email,
 				},
 			});
-			if (!user) {
-				return done(null, false, {
-					message: "No account associated with that email address",
-				});
+			let result = false;
+			if (user) {
+				result = bcrypt.compareSync(password, user.password);
 			}
-			const result = bcrypt.compareSync(
-				password,
-				user.password
-			);
-			if (result == false) {
+			if (!result) {
 				return done(null, false, {
-					message: "Incorrect password.",
+					message:
+						"No account associated with that email address or the password is incorrect.",
 				});
+			} else {
+				return done(null, user);
 			}
-			return done(null, user);
 		} catch (err) {
 			done(err);
 		}

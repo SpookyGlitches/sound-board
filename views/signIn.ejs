@@ -24,6 +24,7 @@
                         <% }else{ %>
                             <%- include("./partials/error.ejs")%>
                         <% } %>
+                        <% include("./partials/success.ejs") %> 
                         <form action="/auth/signin" method="post">
                             <div class="mb-3">
                                 <label for="email" class="form-label fw-bold">Email addresss</label>

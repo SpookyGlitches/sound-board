@@ -11,6 +11,7 @@ const homeRouter = require("./routes/home");
 const svboardsRouter = require("./routes/savedBoards");
 const sboardsRouter = require("./routes/soundBoards");
 const profileRouter = require("./routes/profile");
+const accountsRouter = require("./routes/accounts");
 
 const isAuthenticated = require("./middlewares/isAuthenticated");
 const handleError = require("./middlewares/handleError");
@@ -42,6 +43,7 @@ app.get("/", (req, res) => res.redirect("/home"));
 
 app.use("/static", express.static("public"));
 app.use("/auth", authRouter);
+app.use("/account", accountsRouter);
 
 app.use(isAuthenticated);
 
