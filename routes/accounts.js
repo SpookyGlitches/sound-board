@@ -12,10 +12,15 @@ router.get("/verify", account.verify);
 
 router.get("/verify/resend", account.getVerificationPage);
 
-// router.post("/verify/resend", account.resendVerification);
+router.post("/verify/resend", account.resendVerification);
 
-// router.get("/reset", account.getResetPage);
+router.get("/reset-password", account.getResetPasswordPage);
 
+// router.post("/reset-password", account.sendResetPasswordLink);
+
+// router.get("/reset-password/:token", account.getChangePasswordPage);
+
+// router.post("/reset-password/:token", account.changePassword);
 // router.post("/reset", account.reset);
 
 // router.post("/update", account.update);

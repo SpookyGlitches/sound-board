@@ -3,6 +3,7 @@ require("dotenv").config();
 const { Op } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const db = require("../models/db");
 const email = require("./helpers/email");
@@ -90,10 +91,15 @@ exports.signup = async (req, res, next) => {
 			},
 			{ transaction: t }
 		);
+		const token = jwt.sign(
+			{ id: newUser.user_id, name: newUser.display_name },
+			process.env.VERIFICATION_SECRET_KEY,
+			{ expiresIn: "30m" }
+		);
 		await email.sendVerificationEmail(
 			newUser.email_address,
 			newUser.display_name,
-			newUser.user_id
+			token
 		);
 		await t.commit();
 		req.flash("success", "We've sent you a link to verify your email!");
