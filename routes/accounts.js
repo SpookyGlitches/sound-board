@@ -16,11 +16,12 @@ router.post("/verify/resend", account.resendVerification);
 
 router.get("/reset-password", account.getResetPasswordPage);
 
-// router.post("/reset-password", account.sendResetPasswordLink);
+router.post("/reset-password", account.sendResetPasswordLink);
 
-// router.get("/reset-password/:token", account.getChangePasswordPage);
+router.get("/reset-password/:token", account.getChangePasswordPage);
 
-// router.post("/reset-password/:token", account.changePassword);
+router.post("/reset-password/:token", account.changePassword);
+
 // router.post("/reset", account.reset);
 
 // router.post("/update", account.update);

@@ -5,6 +5,7 @@ const {
 	sendVerificationEmail,
 	sendResetPasswordEmail,
 } = require("./helpers/email");
+const { hashSync } = require("bcrypt");
 
 exports.verify = async (req, res, next) => {
 	try {
@@ -60,24 +61,80 @@ exports.getResetPasswordPage = (req, res, next) => {
 	});
 };
 
-// exports.getChangePasswordPage = (req, res, next) => {
-// 	try{
-// 		const decoded = jwt.verify(
-// 			req.query.token,
-// 			process.env.VERIFICATION_SECRET_KEY
-// 		);
-// 	}catch(err){
+exports.getChangePasswordPage = async (req, res, next) => {
+	try {
+		const decoded = jwt.verify(
+			req.body.token,
+			process.env.RESET_PASSWORD_SECRET_KEY
+		);
+		const user = await User.findOne({
+			where: {
+				email_address: decoded.email,
+				password: decoded.password,
+			},
+		});
+		if (!user) {
+			//idk any better thing to do here
+			return res.status(404).send();
+		}
+		res.render("changePassword", {
+			email_address: decoded.email,
+			token: req.params.token,
+		});
+	} catch (err) {
+		const name = err.name;
+		if (
+			name == "JsonWebTokenError" ||
+			name == "NotBeforeError" ||
+			name == "TokenExpiredError"
+		) {
+			req.flash("errors", [
+				{
+					msg: "The token is invalid. Please repeat the reset password process again.",
+				},
+			]);
+			res.redirect("/account/reset-password");
+		} else {
+			next(err);
+		}
+	}
+};
 
-// 	}
-
-// 	res.render("changePassword", { token: req.params.token });
-// };
-
-// exports.changePassword = (req,res) => {
-// 	try{
-
-// 	}
-// }
+exports.changePassword = async (req, res, next) => {
+	try {
+		const decoded = jwt.verify(
+			req.body.token,
+			process.env.RESET_PASSWORD_SECRET_KEY
+		);
+		const user = await User.findOne({
+			where: {
+				email_address: decoded.email_address,
+			},
+		});
+		if (!user) {
+			return res.status(404).send();
+		}
+		await user.update({ password: hashSync(req.body.password, 10) });
+		req.flash("success", "Successfully updated password");
+		res.redirect("/auth/signin");
+	} catch (err) {
+		const name = err.name;
+		if (
+			name == "JsonWebTokenError" ||
+			name == "NotBeforeError" ||
+			name == "TokenExpiredError"
+		) {
+			req.flash("errors", [
+				{
+					msg: "The token is invalid. Please repeat the reset password process again.",
+				},
+			]);
+			res.redirect("/account/reset-password");
+		} else {
+			next(err);
+		}
+	}
+};
 
 exports.sendResetPasswordLink = async (req, res, next) => {
 	try {
@@ -88,7 +145,7 @@ exports.sendResetPasswordLink = async (req, res, next) => {
 		});
 		if (user) {
 			const token = jwt.sign(
-				{ email: user.email_address },
+				{ email: user.email_address, password: user.password },
 				process.env.RESET_PASSWORD_SECRET_KEY,
 				{ expiresIn: "30m" }
 			);
@@ -99,32 +156,6 @@ exports.sendResetPasswordLink = async (req, res, next) => {
 			);
 		}
 		req.flash("success", "Check your email for the reset password link.");
-		res.redirect("back");
-	} catch (err) {
-		next(err);
-	}
-};
-
-exports.recover = async (req, res) => {
-	try {
-		const user = await User.findOne({
-			where: {
-				email_address: req.body.email_address,
-			},
-		});
-		if (user) {
-			const token = jwt.sign(
-				{ password: user.password, name: user.display_name },
-				process.env.VERIFICATION_SECRET_KEY,
-				{ expiresIn: "30m" }
-			);
-			await sendVerificationEmail(
-				user.email_address,
-				user.display_name,
-				token
-			);
-		}
-		req.flash("success", "Successfully resent the verification email.");
 		res.redirect("back");
 	} catch (err) {
 		next(err);
