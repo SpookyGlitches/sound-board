@@ -3,9 +3,6 @@ const router = express.Router();
 
 const profile = require("../controllers/profileController");
 
-const validate = require("../validations/mw");
-const userValidation = require("../validations/user");
-
 router.get("/", profile.get);
 
 //forgive me father for i have sinned

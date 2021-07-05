@@ -3,9 +3,7 @@ const { body } = require("express-validator");
 const signup = [
 	body("email_address")
 		.isEmail()
-		.withMessage(
-			"Email address field must be of type email address"
-		),
+		.withMessage("Email address field must be of type email address"),
 	body("display_name")
 		.trim()
 		.isLength({ min: 2, max: 20 })
@@ -25,16 +23,30 @@ const signup = [
 const signin = [
 	body("email_address")
 		.isEmail()
-		.withMessage(
-			"Email address field must be of type email address"
-		),
+		.withMessage("Email address field must be of type email address"),
 	body("password")
 		.not()
 		.isEmpty()
 		.withMessage("Password field must not be empty"),
 ];
 
+const changePassword = [
+	body("password")
+		.isStrongPassword()
+		.withMessage(
+			"Password must be minimum of 8 characters and contain an upppercase, lowercase, number, and a symbol."
+		),
+	body("confirm_password")
+		.custom((value, { req }) => {
+			return value === req.body.password;
+		})
+		.withMessage("Passwords do not match"),
+	body("token").not().isEmpty(),
+	body("email_address").not().isEmpty(),
+];
+
 module.exports = {
 	signup,
 	signin,
+	changePassword,
 };

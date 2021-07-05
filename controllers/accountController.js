@@ -229,3 +229,35 @@ exports.get = (req, res, next) => {
 		})
 		.catch(next);
 };
+
+exports.updateDisplayName = async (req, res, next) => {
+	try {
+		let user = await User.findOne({
+			where: {
+				display_name: req.body.display_name,
+			},
+		});
+		if (user && user.user_id != req.user.user_id) {
+			req.flash("errors", [
+				{
+					msg: "Display name is being used by someone.",
+				},
+			]);
+			return res.redirect("back");
+		}
+		await User.update(
+			{
+				display_name: req.body.display_name,
+			},
+			{
+				where: {
+					user_id: req.user.user_id,
+				},
+			}
+		);
+		req.flash("success", "Successfully updated display name.");
+		res.redirect("back");
+	} catch (err) {
+		next(err);
+	}
+};
