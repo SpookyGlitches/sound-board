@@ -5,7 +5,7 @@ const {
 	sendVerificationEmail,
 	sendResetPasswordEmail,
 } = require("./helpers/email");
-const { hashSync } = require("bcrypt");
+const { hashSync, compareSync } = require("bcrypt");
 
 exports.verify = async (req, res, next) => {
 	try {
@@ -64,7 +64,7 @@ exports.getResetPasswordPage = (req, res, next) => {
 exports.getChangePasswordPage = async (req, res, next) => {
 	try {
 		const decoded = jwt.verify(
-			req.body.token,
+			req.params.token,
 			process.env.RESET_PASSWORD_SECRET_KEY
 		);
 		const user = await User.findOne({
@@ -83,6 +83,7 @@ exports.getChangePasswordPage = async (req, res, next) => {
 		});
 	} catch (err) {
 		const name = err.name;
+		console.log(err);
 		if (
 			name == "JsonWebTokenError" ||
 			name == "NotBeforeError" ||
@@ -108,7 +109,7 @@ exports.changePassword = async (req, res, next) => {
 		);
 		const user = await User.findOne({
 			where: {
-				email_address: decoded.email_address,
+				email_address: decoded.email,
 			},
 		});
 		if (!user) {
@@ -186,4 +187,45 @@ exports.resendVerification = async (req, res, next) => {
 	} catch (err) {
 		next(err);
 	}
+};
+
+exports.updatePassword = async (req, res, next) => {
+	try {
+		const user = await User.findByPk(req.user.user_id);
+		if (!user) return res.status(403).send(); //idk what to do here
+		const result = compareSync(req.body.old_password, user.password);
+		if (!result) {
+			req.flash("errors", [{ msg: "Incorrect password." }]);
+			return res.redirect("back");
+		}
+		await User.update(
+			{
+				password: hashSync(req.body.password, 10),
+			},
+			{
+				where: {
+					user_id: req.user.user_id,
+				},
+			}
+		);
+		req.flash("success", "Updated password.");
+		res.redirect("back");
+	} catch (err) {
+		next(err);
+	}
+};
+
+exports.get = (req, res, next) => {
+	User.findOne({
+		where: {
+			user_id: req.user.user_id,
+		},
+	})
+		.then((user) => {
+			res.render("profile", {
+				email_address: user.email_address,
+				display_name: user.display_name,
+			});
+		})
+		.catch(next);
 };

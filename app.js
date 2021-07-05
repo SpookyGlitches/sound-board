@@ -10,7 +10,6 @@ const authRouter = require("./routes/auth");
 const homeRouter = require("./routes/home");
 const svboardsRouter = require("./routes/savedBoards");
 const sboardsRouter = require("./routes/soundBoards");
-const profileRouter = require("./routes/profile");
 const accountsRouter = require("./routes/accounts");
 
 const isAuthenticated = require("./middlewares/isAuthenticated");
@@ -50,7 +49,6 @@ app.use(isAuthenticated);
 app.use("/home", homeRouter);
 app.use("/savedboards", svboardsRouter);
 app.use("/soundboards", sboardsRouter);
-app.use("/profile", profileRouter);
 
 app.use(handleError);
 

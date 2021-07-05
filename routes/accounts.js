@@ -22,8 +22,8 @@ router.get("/reset-password/:token", account.getChangePasswordPage);
 
 router.post("/reset-password/:token", account.changePassword);
 
-// router.post("/reset", account.reset);
+router.post("/password", account.updatePassword);
 
-// router.post("/update", account.update);
+router.get("/", account.get);
 
 module.exports = router;
