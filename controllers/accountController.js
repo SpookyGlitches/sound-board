@@ -1,11 +1,8 @@
 const db = require("../models/db");
 const User = db.users;
 const jwt = require("jsonwebtoken");
-const {
-	sendVerificationEmail,
-	sendResetPasswordEmail,
-} = require("./helpers/email");
-const { hashSync, compareSync } = require("bcrypt");
+const sendEmail = require("../helpers/email");
+const { hash, compare } = require("bcrypt");
 
 exports.verify = async (req, res, next) => {
 	try {
@@ -13,7 +10,6 @@ exports.verify = async (req, res, next) => {
 			req.query.token,
 			process.env.VERIFICATION_SECRET_KEY
 		);
-		console.log(decoded);
 		const user = await User.findByPk(decoded.id);
 		if (!user) {
 			req.flash("errors", [
@@ -22,39 +18,25 @@ exports.verify = async (req, res, next) => {
 				},
 			]);
 			return res.redirect("/auth/signin");
+		} else if (!user.verified_at) {
+			user.verified_at = db.sequelize.literal("CURRENT_TIMESTAMP");
+			await user.save();
 		}
-		user.verified_at = db.sequelize.literal("CURRENT_TIMESTAMP");
-		await user.save();
 		req.flash("success", "Email verified!");
 		res.redirect("/auth/signin");
 	} catch (err) {
-		console.log(err);
-		const msg = err.name;
-		if (
-			msg == "JsonWebTokenError" ||
-			msg == "NotBeforeError" ||
-			msg == "TokenExpiredError"
-		) {
-			req.flash("errors", [
-				{
-					msg: "The token is invalid. Try resending a new one by submitting up the form below.",
-				},
-			]);
-			res.redirect("/account/verify/resend");
-		} else {
-			next(err);
-		}
+		next(err);
 	}
 };
 
-exports.getVerificationPage = (req, res, next) => {
+exports.getVerificationPage = (req, res) => {
 	res.render("accountTrouble", {
 		title: "Resend Verification Email",
 		route: "/account/verify/resend",
 	});
 };
 
-exports.getResetPasswordPage = (req, res, next) => {
+exports.getResetPasswordPage = (req, res) => {
 	res.render("accountTrouble", {
 		title: "Reset Password",
 		route: "/account/reset-password",
@@ -65,7 +47,7 @@ exports.getChangePasswordPage = async (req, res, next) => {
 	try {
 		const decoded = jwt.verify(
 			req.params.token,
-			process.env.RESET_PASSWORD_SECRET_KEY
+			process.env.PASSWORD_SECRET_KEY
 		);
 		const user = await User.findOne({
 			where: {
@@ -73,31 +55,13 @@ exports.getChangePasswordPage = async (req, res, next) => {
 				password: decoded.password,
 			},
 		});
-		if (!user) {
-			//idk any better thing to do here
-			return res.status(404).send();
-		}
+		if (!user) return res.status(404).send();
 		res.render("changePassword", {
 			email_address: decoded.email,
 			token: req.params.token,
 		});
 	} catch (err) {
-		const name = err.name;
-		console.log(err);
-		if (
-			name == "JsonWebTokenError" ||
-			name == "NotBeforeError" ||
-			name == "TokenExpiredError"
-		) {
-			req.flash("errors", [
-				{
-					msg: "The token is invalid. Please repeat the reset password process again.",
-				},
-			]);
-			res.redirect("/account/reset-password");
-		} else {
-			next(err);
-		}
+		next(err);
 	}
 };
 
@@ -105,55 +69,41 @@ exports.changePassword = async (req, res, next) => {
 	try {
 		const decoded = jwt.verify(
 			req.body.token,
-			process.env.RESET_PASSWORD_SECRET_KEY
+			process.env.PASSWORD_SECRET_KEY
 		);
 		const user = await User.findOne({
 			where: {
 				email_address: decoded.email,
 			},
 		});
-		if (!user) {
-			return res.status(404).send();
-		}
-		await user.update({ password: hashSync(req.body.password, 10) });
+		if (!user) return res.status(404).send();
+		const password = await hash(req.body.password, 10);
+		await user.update({ password: password });
 		req.flash("success", "Successfully updated password");
 		res.redirect("/auth/signin");
 	} catch (err) {
-		const name = err.name;
-		if (
-			name == "JsonWebTokenError" ||
-			name == "NotBeforeError" ||
-			name == "TokenExpiredError"
-		) {
-			req.flash("errors", [
-				{
-					msg: "The token is invalid. Please repeat the reset password process again.",
-				},
-			]);
-			res.redirect("/account/reset-password");
-		} else {
-			next(err);
-		}
+		next(err);
 	}
 };
 
 exports.sendResetPasswordLink = async (req, res, next) => {
 	try {
-		const user = await User.findOne({
+		const { email_address, password, display_name } = await User.findOne({
 			where: {
 				email_address: req.body.email_address,
 			},
 		});
-		if (user) {
+		if (email_address) {
 			const token = jwt.sign(
-				{ email: user.email_address, password: user.password },
-				process.env.RESET_PASSWORD_SECRET_KEY,
+				{ email: email_address, password: password },
+				process.env.PASSWORD_SECRET_KEY,
 				{ expiresIn: "30m" }
 			);
-			await sendResetPasswordEmail(
-				user.email_address,
-				user.display_name,
-				token
+			const resetPasswordRoute = `/account/reset-password/${token}`;
+			await sendEmail(
+				{ email_address: email_address, display_name: display_name },
+				"RESET_PASSWORD",
+				resetPasswordRoute
 			);
 		}
 		req.flash("success", "Check your email for the reset password link.");
@@ -176,10 +126,14 @@ exports.resendVerification = async (req, res, next) => {
 				process.env.VERIFICATION_SECRET_KEY,
 				{ expiresIn: "30m" }
 			);
-			await sendVerificationEmail(
-				user.email_address,
-				user.display_name,
-				token
+			const verifyEmailRoute = `/account/verify?token=${token}`;
+			await sendEmail(
+				{
+					email_address: user.email_address,
+					display_name: user.display_name,
+				},
+				"VERIFY_EMAIL",
+				verifyEmailRoute
 			);
 		}
 		req.flash("success", "Successfully resent the verification email.");
@@ -192,21 +146,31 @@ exports.resendVerification = async (req, res, next) => {
 exports.updatePassword = async (req, res, next) => {
 	try {
 		const user = await User.findByPk(req.user.user_id);
-		if (!user) return res.status(403).send(); //idk what to do here
-		const result = compareSync(req.body.old_password, user.password);
+		if (!user) return res.status(403).send();
+		const result = await compare(req.body.old_password, user.password);
 		if (!result) {
 			req.flash("errors", [{ msg: "Incorrect password." }]);
 			return res.redirect("back");
 		}
-		await User.update(
+		const password = await hash(req.body.password, 10);
+		await user.update(
 			{
-				password: hashSync(req.body.password, 10),
+				password: password,
 			},
 			{
 				where: {
 					user_id: req.user.user_id,
 				},
 			}
+		);
+		const resetPasswordRoute = `/account/reset-password`;
+		await sendEmail(
+			{
+				email_address: user.email_address,
+				display_name: user.display_name,
+			},
+			"UPDATE_PASSWORD",
+			resetPasswordRoute
 		);
 		req.flash("success", "Updated password.");
 		res.redirect("back");
@@ -245,7 +209,7 @@ exports.updateDisplayName = async (req, res, next) => {
 			]);
 			return res.redirect("back");
 		}
-		await User.update(
+		await user.update(
 			{
 				display_name: req.body.display_name,
 			},

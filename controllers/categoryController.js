@@ -2,7 +2,6 @@ const db = require("../models/db");
 
 const SoundBoard = db.boards;
 const Category = db.categories;
-const User = db.users;
 const Sound = db.sounds;
 
 exports.create = async (req, res, next) => {

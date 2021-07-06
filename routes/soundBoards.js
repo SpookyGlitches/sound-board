@@ -2,12 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 const sboard = require("../controllers/soundBoardController");
+const isAuthenticated = require("../middlewares/isAuthenticated");
 
 const validate = require("../validations/mw");
 const soundBoardValidation = require("../validations/soundBoard");
 
 const categoriesRouter = require("./categories");
 const commentsRouter = require("./comments");
+
+router.use(isAuthenticated);
 
 router.get("/", sboard.index);
 

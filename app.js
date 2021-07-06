@@ -12,7 +12,6 @@ const svboardsRouter = require("./routes/savedBoards");
 const sboardsRouter = require("./routes/soundBoards");
 const accountsRouter = require("./routes/accounts");
 
-const isAuthenticated = require("./middlewares/isAuthenticated");
 const handleError = require("./middlewares/handleError");
 
 const app = express();
@@ -22,7 +21,13 @@ app.set("view engine", "ejs");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ secret: "C4$s", resave: false, saveUninitialized: false }));
+app.use(
+	session({
+		secret: process.env.SESSION_SECRET,
+		resave: false,
+		saveUninitialized: false,
+	})
+);
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -43,9 +48,6 @@ app.get("/", (req, res) => res.redirect("/home"));
 app.use("/static", express.static("public"));
 app.use("/auth", authRouter);
 app.use("/account", accountsRouter);
-
-app.use(isAuthenticated);
-
 app.use("/home", homeRouter);
 app.use("/savedboards", svboardsRouter);
 app.use("/soundboards", sboardsRouter);

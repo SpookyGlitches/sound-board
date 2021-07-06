@@ -1,6 +1,6 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const bcrypt = require("bcrypt");
+const { compare } = require("bcrypt");
 
 const User = require("../models/db").users;
 
@@ -19,7 +19,7 @@ passport.use(
 			});
 			let result = false;
 			if (user) {
-				result = bcrypt.compareSync(password, user.password);
+				result = await compare(password, user.password);
 			}
 			if (!result) {
 				return done(null, false, {

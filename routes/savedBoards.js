@@ -3,8 +3,9 @@ const router = express.Router();
 
 const svboard = require("../controllers/savedBoardController");
 
-// const validate = require("../validations/mw");
-// const svboardValidation = require("../validations/savedBoard");
+const isAuthenticated = require("../middlewares/isAuthenticated");
+
+router.use(isAuthenticated);
 
 router.post("/create/:soundBoardId", svboard.create);
 

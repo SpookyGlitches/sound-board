@@ -5,6 +5,7 @@ const account = require("../controllers/accountController");
 
 const validate = require("../validations/mw");
 const userValidation = require("../validations/user");
+const isAuthenticated = require("../middlewares/isAuthenticated");
 
 router.get("/verify", account.verify);
 
@@ -38,10 +39,11 @@ router.post(
 	account.updatePassword
 );
 
-router.get("/", account.get);
+router.get("/", isAuthenticated, account.get);
 
 router.post(
 	"/",
+	isAuthenticated,
 	validate([userValidation.signup[0]]),
 	account.updateDisplayName
 );

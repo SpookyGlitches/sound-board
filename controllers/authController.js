@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const db = require("../models/db");
-const email = require("./helpers/email");
+const sendEmail = require("../helpers/email");
 
 const User = db.users;
 
@@ -30,7 +30,7 @@ exports.signin = [
 				if (!user.verified_at) {
 					req.flash("errors", [
 						{
-							msg: `Your email address is not verified. Click the link on the email that we've sent to you to verify your email.`,
+							msg: `Your email address is not verified. Click the link on the email that we've sent to you to verify your email or click resend verification email located below.`,
 						},
 					]);
 					return res.redirect("back");
@@ -49,8 +49,6 @@ exports.signout = (req, res) => {
 };
 
 exports.signup = async (req, res, next) => {
-	//todo
-	//make password hash async
 	const t = await db.sequelize.transaction();
 
 	try {
@@ -96,10 +94,14 @@ exports.signup = async (req, res, next) => {
 			process.env.VERIFICATION_SECRET_KEY,
 			{ expiresIn: "30m" }
 		);
-		await email.sendVerificationEmail(
-			newUser.email_address,
-			newUser.display_name,
-			token
+		const verifyEmailRoute = `/account/verify?token=${token}`;
+		await sendEmail(
+			{
+				display_name: newUser.display_name,
+				email_address: newUser.email_address,
+			},
+			"VERIFY_EMAIL",
+			verifyEmailRoute
 		);
 		await t.commit();
 		req.flash("success", "We've sent you a link to verify your email!");
@@ -109,26 +111,3 @@ exports.signup = async (req, res, next) => {
 		next(err);
 	}
 };
-
-// const token = email.createVerificationToken(
-// 	createdUser.display_name,
-// 	createdUser.user_id
-// );
-// var data = {
-// 	from: ` <verification@${process.env.DOMAIN_NAME}>`,
-// 	to: createdUser.email_address,
-// 	subject: "Verify your Email",
-// 	text: email.createEmailContent(createdUser.display_name, token),
-// };
-// mailgun.messages().send(data, async function (error, body) {
-// 	console.log(body);
-// 	if (error) console.log(error);
-// 	else {
-// 		await t.commit();
-// 		req.flash(
-// 			"success",
-// 			"We've sent you a link to verify your email!"
-// 		);
-// 		res.redirect("back");
-// 	}
-// });
