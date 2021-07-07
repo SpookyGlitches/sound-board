@@ -40,12 +40,14 @@
                                             <button type="submit" class="btn btn-dark btn-sm d-flex align-items-center">
                                                 Save to my boards
                                             </button>
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                         </form>
                                     <% }else{ %>
                                         <form action="/savedboards/delete/<%= sboard.board_id %>" method="post">
                                             <button type="submit" class="btn btn-dark btn-sm d-flex align-items-center">
                                                 Remove
                                             </button>
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                         </form>      
                                     <% } %>
                                 <% }else{%>
@@ -118,8 +120,9 @@
                                         Close
                                     </button>
                                     <input class="btn btn-dark btn-sm" type="submit" value="Create" />
-                                </div>
+                                </div>                                
                             </div>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         </form>
                     </div>
                 </div>
@@ -145,6 +148,7 @@
                                       <% if (user_id == sboard.comments[index].user_id && ! sboard.comments[index].deleted_at) { %>
                                         <form action="/soundboards/<%= sboard.board_id %>/comments/<%= sboard.comments[index].comment_id %>/delete" class="d-flex justify-content-end" onsubmit="return confirm('Delete this comment?');" method="post">
                                             <input type="submit" class="btn-sm btn btn-light" value="Delete">
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                         </form>
                                       <% } %>
                                   </div>
@@ -159,6 +163,7 @@
                                 <div class="d-flex flex-row-reverse">
                                     <button class="btn btn-sm mt-2 btn-dark" id='commentBtn' type="submit">Comment</button>
                                 </div>
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                             </form>  
                           </div>
                       </div>

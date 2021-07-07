@@ -1,5 +1,6 @@
 module.exports = function (err, req, res, next) {
 	console.log(err);
+	console.log("Name of Error:" + err.name);
 	switch (err.name) {
 		case "JsonWebTokenError":
 		case "NotBeforeError":

@@ -10,7 +10,11 @@ const Comment = db.comments;
 exports.get = async (req, res, next) => {
 	try {
 		let boardId = req.query.board;
-		let obj = { isSaved: true, user_id: req.user.user_id };
+		let obj = {
+			isSaved: true,
+			user_id: req.user.user_id,
+			csrfToken: req.csrfToken(),
+		};
 		let sequelize = db.sequelize;
 		if (!boardId) {
 			//get one in saved boards since no queried board id
@@ -23,6 +27,7 @@ exports.get = async (req, res, next) => {
 				return res.render("home", {
 					sboard: null,
 					isOp: false,
+					csrfToken: req.csrfToken(),
 				});
 			boardId = svboard.board_id;
 		}

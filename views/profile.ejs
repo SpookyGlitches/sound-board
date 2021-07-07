@@ -29,6 +29,7 @@
                             data-bs-target="#changePasswordModal" type="button">Change password</button>
                         <button class="btn btn-sm btn-dark" type="submit">Edit name</button>
                     </div>
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 </form>
             </div>
             <div class="modal fade" id="changePasswordModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
@@ -61,6 +62,8 @@
                                     </button>
                                     <input class="btn btn-dark btn-sm" type="submit" value="Change" />
                                 </div>
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
                             </form>
                         </div>
                     </div>

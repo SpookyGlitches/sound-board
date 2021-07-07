@@ -1,5 +1,8 @@
 const express = require("express");
+const csrf = require("csurf");
 const router = express.Router();
+
+const csrfProtection = csrf();
 
 const sboard = require("../controllers/soundBoardController");
 const isAuthenticated = require("../middlewares/isAuthenticated");
@@ -14,19 +17,25 @@ router.use(isAuthenticated);
 
 router.get("/", sboard.index);
 
-router.post("/create", validate(soundBoardValidation), sboard.create);
+router.post(
+	"/create",
+	csrfProtection,
+	validate(soundBoardValidation),
+	sboard.create
+);
 
 router.post(
 	"/:soundBoardId/edit",
+	csrfProtection,
 	validate(soundBoardValidation),
 	sboard.update
 );
 
-router.get("/create", sboard.getCreateEditPage);
+router.get("/create", csrfProtection, sboard.getCreateEditPage);
 
-router.get("/:soundBoardId/edit", sboard.getCreateEditPage);
+router.get("/:soundBoardId/edit", csrfProtection, sboard.getCreateEditPage);
 
-router.post("/:soundBoardId/delete", sboard.destroy);
+router.post("/:soundBoardId/delete", csrfProtection, sboard.destroy);
 
 router.use("/:soundBoardId/categories", categoriesRouter);
 

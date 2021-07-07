@@ -97,6 +97,7 @@ exports.getCreateEditPage = (req, res, next) => {
 					res.render("create", {
 						sboard: sboard,
 						title: "Edit",
+						csrfToken: req.csrfToken(),
 					});
 				}
 			})
@@ -113,6 +114,7 @@ exports.getCreateEditPage = (req, res, next) => {
 				description: null,
 			},
 			title: "Create",
+			csrfToken: req.csrfToken(),
 		});
 	}
 };

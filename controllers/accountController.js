@@ -33,6 +33,7 @@ exports.getVerificationPage = (req, res) => {
 	res.render("accountTrouble", {
 		title: "Resend Verification Email",
 		route: "/account/verify/resend",
+		csrfToken: req.csrfToken(),
 	});
 };
 
@@ -40,6 +41,7 @@ exports.getResetPasswordPage = (req, res) => {
 	res.render("accountTrouble", {
 		title: "Reset Password",
 		route: "/account/reset-password",
+		csrfToken: req.csrfToken(),
 	});
 };
 
@@ -59,6 +61,7 @@ exports.getChangePasswordPage = async (req, res, next) => {
 		res.render("changePassword", {
 			email_address: decoded.email,
 			token: req.params.token,
+			csrfToken: req.csrfToken(),
 		});
 	} catch (err) {
 		next(err);
@@ -153,16 +156,9 @@ exports.updatePassword = async (req, res, next) => {
 			return res.redirect("back");
 		}
 		const password = await hash(req.body.password, 10);
-		await user.update(
-			{
-				password: password,
-			},
-			{
-				where: {
-					user_id: req.user.user_id,
-				},
-			}
-		);
+		await user.update({
+			password: password,
+		});
 		const resetPasswordRoute = `/account/reset-password`;
 		await sendEmail(
 			{
@@ -189,6 +185,7 @@ exports.get = (req, res, next) => {
 			res.render("profile", {
 				email_address: user.email_address,
 				display_name: user.display_name,
+				csrfToken: req.csrfToken(),
 			});
 		})
 		.catch(next);
@@ -209,7 +206,7 @@ exports.updateDisplayName = async (req, res, next) => {
 			]);
 			return res.redirect("back");
 		}
-		await user.update(
+		await User.update(
 			{
 				display_name: req.body.display_name,
 			},

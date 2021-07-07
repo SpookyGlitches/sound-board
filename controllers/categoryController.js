@@ -56,6 +56,7 @@ exports.index = (req, res, next) => {
 			res.render("category", {
 				sboard: sboard,
 				isOp: sboard.user_id == req.user.user_id,
+				csrfToken: req.csrfToken(),
 			});
 		})
 		.catch(next);

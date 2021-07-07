@@ -1,13 +1,16 @@
 const express = require("express");
+const csrf = require("csurf");
 const router = express.Router();
+const csrfProtection = csrf();
 
 const account = require("../controllers/accountController");
-
 const validate = require("../validations/mw");
 const userValidation = require("../validations/user");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
 router.get("/verify", account.verify);
+
+router.use(csrfProtection);
 
 router.get("/verify/resend", account.getVerificationPage);
 

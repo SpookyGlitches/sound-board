@@ -11,11 +11,14 @@ const sendEmail = require("../helpers/email");
 const User = db.users;
 
 exports.getLoginPage = (req, res) => {
-	res.render("signIn", { error: req.flash("error") });
+	res.render("signIn", {
+		error: req.flash("error"),
+		csrfToken: req.csrfToken(),
+	});
 };
 
 exports.getSignupPage = (req, res) => {
-	res.render("signUp");
+	res.render("signUp", { csrfToken: req.csrfToken() });
 };
 
 exports.signin = [

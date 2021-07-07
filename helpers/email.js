@@ -41,7 +41,6 @@ function getEmailContent(display_name, action, route) {
 			break;
 	}
 	obj.body += "</div>";
-	console.log(obj.body);
 	return obj;
 }
 
