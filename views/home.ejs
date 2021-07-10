@@ -145,7 +145,7 @@
                                   <div class="d-flex align-items-center justify-content-between">
                                       <p class='m-0 text-break'><%= sboard.comments[index].content %> </p>
                                       <% if (user_id == sboard.comments[index].user_id && ! sboard.comments[index].deleted_at) { %>
-                                        <form action="/soundboards/<%= sboard.board_id %>/comments/<%= sboard.comments[index].comment_id %>/delete" class="d-flex justify-content-end" onsubmit="return confirm('Delete this comment?');" method="post">
+                                        <form action="/soundboards/<%= sboard.board_id %>/comments/<%= sboard.comments[index].comment_id %>/delete" class="d-flex justify-content-end delete-comment"  method="post">
                                             <input type="submit" class="btn-sm btn btn-light" value="Delete">
                                             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                         </form>

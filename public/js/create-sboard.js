@@ -17,7 +17,7 @@ document.getElementById("deleteSboard").addEventListener("submit", (event) => {
 	if (!confirm("Are you sure you want to delete this?")) {
 		return false;
 	} else {
-		event.submit();
+		this.submit();
 	}
 });
 
