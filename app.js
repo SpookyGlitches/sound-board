@@ -5,6 +5,8 @@ const fileUpload = require("express-fileupload");
 const session = require("express-session");
 const passport = require("./config/passport");
 const flash = require("connect-flash");
+const helmet = require("helmet");
+const cors = require("cors");
 
 const authRouter = require("./routes/auth");
 const homeRouter = require("./routes/home");
@@ -18,6 +20,21 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
+
+//not sure what i'm doing here
+app.use(cors({ origin: true }));
+app.use(
+	helmet({
+		contentSecurityPolicy: {
+			useDefaults: true,
+			directives: {
+				"script-src": ["'self'", "https://cdn.jsdelivr.net"],
+
+				"style-src": ["'self'", "https://cdn.jsdelivr.net"],
+			},
+		},
+	})
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

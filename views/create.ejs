@@ -16,7 +16,7 @@
                 <h1 class="fw-bolder"><%=title%> a sound board</h1>
                 <p>Make sure your visitors wont get bored! 😉</p>
                 <%let route = title == 'Edit' ? sboard.board_id+"/edit" : title.toLowerCase()%>
-                <form onsubmit="return onFormSubmit()" action="/soundboards/<%=route%>" method="post" id="createSoundBoardForm">
+                <form  action="/soundboards/<%=route%>" method="post" id="createSoundBoardForm">
                     <%- include("./partials/error.ejs")%>
 
                     <input type="hidden" name="board_id" value="<%=sboard.board_id%>">
@@ -59,7 +59,7 @@
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 </form>
                 <% if (title == 'Edit') { %>
-                    <form action="/soundboards/<%=sboard.board_id%>/delete" method="post" onsubmit="return confirm('All categories, comments, and sounds will be lost. Proceed?')">
+                    <form action="/soundboards/<%=sboard.board_id%>/delete" method="post" id="deleteSboard">
                         <div class="d-flex justify-content-start">
                             <small>
                                 <button type="submit" class="btn btn-outline-dark btn-sm d-flex delete-btn">Delete</button>
@@ -72,7 +72,7 @@
             </div>
         </div>
     </div>
-    <%- include('./partials/cdn.ejs')%>
 </body>
+<%- include('./partials/cdn.ejs')%>
 <script src="/static/js/create-sboard.js"></script>
 </html>

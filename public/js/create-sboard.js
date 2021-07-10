@@ -13,6 +13,13 @@ function populateTags() {
 		tags.push(element.textContent);
 	}
 }
+document.getElementById("deleteSboard").addEventListener("submit", (event) => {
+	if (!confirm("Are you sure you want to delete this?")) {
+		return false;
+	} else {
+		event.submit();
+	}
+});
 
 document.getElementById("addTagButton").addEventListener("click", (event) => {
 	let val = tagsFld.value.trim();
@@ -41,6 +48,10 @@ function deleteTag(event) {
 	tags = tags.filter((item) => item !== event.target.textContent);
 	event.target.remove();
 }
+
+document
+	.getElementById("createSoundBoardForm")
+	.addEventListener("submit", onFormSubmit);
 
 function onFormSubmit() {
 	if (tags.length <= 0) {

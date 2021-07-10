@@ -4,16 +4,27 @@ for (x = 0; x < soundButtonsModal.length; x++) {
 	soundButtonsModal[x].addEventListener("click", changeModalDetails);
 }
 
+let deleteForm = document.getElementsByClassName("delete");
+for (x = 0; x < deleteForm.length; x++) {
+	deleteForm[x].addEventListener("click", confirmDelete);
+}
+
+function confirmDelete(event) {
+	event.preventDefault();
+	if (!confirm("Are you sure you want to delete this?")) {
+		return false;
+	} else {
+		this.submit();
+	}
+}
+
 function changeModalDetails(event) {
 	let label = document.getElementById("sound-label");
 	let desc = document.getElementById("sound-description");
 	let soundTitle = document.getElementById("sound-title");
 	let form = document.getElementById("form");
 	let route = `/soundboards/${form.dataset.sboardid}/categories/${form.dataset.catid}/sounds`;
-	let modal = new bootstrap.Modal(
-		document.getElementById("soundModal"),
-		{}
-	);
+	let modal = new bootstrap.Modal(document.getElementById("soundModal"), {});
 
 	let target = event.currentTarget;
 

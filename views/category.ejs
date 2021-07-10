@@ -39,13 +39,11 @@
                             Add sound
                         </button>
                     </div>
-                    <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/delete" method="post" onsubmit="return confirm('This category and its asssociated sounds will be deleted. Proceed? ')">
+                    <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/delete" class="delete" method="post">
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    
-                        <button type="submit" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal"
-                        data-bs-target="#deleteCategoryModal">
-                        Delete
-                    </button>            
+                        <button type="submit" class="btn btn-sm btn-outline-dark">
+                            Delete
+                        </button>            
                     </form>
                 </div>            
             <% } %>
@@ -55,7 +53,7 @@
                     <div class="col-sm-4 mb-4">
                         <div class="card rounded ">
                             <div class="card-body text-center">
-                                <div class="sound" style="cursor:pointer;" data-src="<%= sounds[index].file %>" data-category="<%= sboard.categories[0].category_id %>" data-sboard="<%= sboard.board_id %> ">
+                                <div class="sound cursor-pointer" data-src="<%= sounds[index].file %>" data-category="<%= sboard.categories[0].category_id %>" data-sboard="<%= sboard.board_id %> ">
                                     <h6 class="fw-bold text-center">
                                         <%= sounds[index].label %> 
                                     </h6>
@@ -67,7 +65,7 @@
                                 </div>
                                 <% if (isOp) { %>
                                     <div class='d-flex gap-2 justify-content-center'>
-                                        <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/sounds/<%= sounds[index].sound_id %>/delete" method="post" onsubmit="return confirm('Delete this sound?')">
+                                        <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/sounds/<%= sounds[index].sound_id %>/delete" method="post" class="delete" >
                                             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                             <button data-soundid="<%= sounds[index].sound_id %>"  class='btn btn-sm btn-light' type="submit" > 
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">

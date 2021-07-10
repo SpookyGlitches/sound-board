@@ -5,6 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
+    <style>
+        .w-20rem{
+            width:20rem;
+        }
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -13,8 +18,8 @@
                 <%- include("./partials/intro") %>
             </div>
             <div class="col d-flex justify-content-center align-items-center">
-                <div class="" style="width:20rem;">
-                    <form action="<%= route %> " method="post">
+                <div class="w-20rem" >
+                    <form action="<%= route %>" method="post">
                         <h2 class="fw-bolder mb-4"><%= title%> </h2>
                         <div class="mt-4">
                             <%- include("./partials/error.ejs")%>
