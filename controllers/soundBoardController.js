@@ -1,4 +1,9 @@
+const {
+	DeleteObjectsCommand,
+	ListObjectsCommand,
+} = require("@aws-sdk/client-s3");
 const { Op } = require("sequelize");
+const { s3Client } = require("../config/s3Client");
 
 const db = require("../models/db");
 
@@ -6,13 +11,12 @@ const SoundBoard = db.boards;
 const SavedBoard = db.saved_boards;
 
 exports.index = async (req, res, next) => {
-	// i should've just used the sequelize pagination for this
-	let offset = req.query.offset || 0;
-	let filter = req.query.filter || "_%";
 	try {
-		const sboards = await SoundBoard.findAll({
-			offset: parseInt(offset) || 0,
-			limit: 5,
+		const limit = 5;
+		const filter = req.query.filter || "_%";
+		let page = parseInt(req.query.page) || 0;
+		page = page <= 0 ? 0 : page - 1;
+		const { count, rows } = await SoundBoard.findAndCountAll({
 			where: {
 				[Op.or]: [
 					{
@@ -27,8 +31,10 @@ exports.index = async (req, res, next) => {
 					},
 				],
 			},
+			offset: page * limit,
+			limit: limit,
 		});
-		res.render("explore", { sboards: sboards, offset: offset });
+		res.render("explore", { sboards: rows, count: count, limit: limit });
 	} catch (err) {
 		next(err);
 	}
@@ -119,20 +125,26 @@ exports.getCreateEditPage = (req, res, next) => {
 	}
 };
 
-exports.destroy = (req, res, next) => {
-	SoundBoard.destroy({
-		where: {
-			board_id: req.params.soundBoardId,
-			user_id: req.user.user_id,
-		},
-	})
-		.then((board) => {
-			if (!board) {
-				res.status(404).send("Cannot find sound board to delete.");
-			}
-			res.redirect("/home");
-		})
-		.catch((err) => {
-			next(err);
+exports.destroy = async (req, res, next) => {
+	try {
+		await SoundBoard.destroy({
+			where: {
+				board_id: req.params.soundBoardId,
+				user_id: req.user.user_id,
+			},
 		});
+		let bucketParams = {
+			Bucket: process.env.AWS_BUCKET_NAME,
+			Key: `${req.params.soundBoardId}/${req.params.categoryId}/`,
+		};
+		const { Contents } = await s3Client.send(
+			new ListObjectsCommand(bucketParams)
+		);
+		delete bucketParams.Key;
+		bucketParams.Delete = { Objects: Contents };
+		await s3Client.send(new DeleteObjectsCommand(bucketParams));
+		res.redirect("/home");
+	} catch (err) {
+		next(err);
+	}
 };

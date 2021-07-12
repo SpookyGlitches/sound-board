@@ -31,6 +31,7 @@ app.use(
 				"script-src": ["'self'", "https://cdn.jsdelivr.net"],
 
 				"style-src": ["'self'", "https://cdn.jsdelivr.net"],
+				"media-src": ["data:", "'self'"],
 			},
 		},
 	})

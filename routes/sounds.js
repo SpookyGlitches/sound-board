@@ -10,7 +10,7 @@ const sound = require("../controllers/soundController");
 const validate = require("../validations/mw");
 const soundValidation = require("../validations/sound");
 
-router.get("/:soundId/:key/play", sound.play);
+router.get("/:soundId/play", sound.play);
 
 router.use(csrfProtection);
 

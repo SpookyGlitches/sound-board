@@ -22,7 +22,9 @@ exports.create = [
 			file: req.body.sound,
 		})
 			.then((sound) => {
-				res.redirect("back");
+				res.redirect(
+					`/soundboards/${req.params.soundBoardId}/categories/${req.params.categoryId}`
+				);
 			})
 			.catch(next);
 	},
@@ -30,7 +32,7 @@ exports.create = [
 
 exports.play = async (req, res, next) => {
 	const downloadParams = {
-		Key: req.params.key,
+		Key: req.query.key,
 		Bucket: process.env.AWS_BUCKET_NAME,
 	};
 	try {
@@ -91,7 +93,11 @@ exports.destroy = [
 				},
 			});
 			if (!sound) return res.status(404).send();
-			await deleteAWSObject(sound.file);
+			const bucketParams = {
+				Bucket: process.env.AWS_BUCKET_NAME,
+				Key: key,
+			};
+			await s3Client.send(new DeleteObjectCommand(bucketParams));
 			await sound.destroy();
 			req.flash("success", "Successfully deleted.");
 			res.redirect("back");
@@ -121,6 +127,8 @@ function canModify(req, res, next) {
 
 async function handleSoundUpload(req, res, next) {
 	if (req.files && req.files.length != 0) {
+		const catId = req.params.categoryId;
+		const sboardId = req.params.soundBoardId;
 		//either an edit or a create
 		try {
 			let fileName;
@@ -131,7 +139,11 @@ async function handleSoundUpload(req, res, next) {
 				await deleteAWSObject(sound.file);
 				fileName = sound.file;
 			} else {
-				fileName = generateFileName(req.files.sound.name);
+				fileName = generateFileName(
+					sboardId,
+					catId,
+					req.files.sound.name
+				);
 			}
 			const uploadParams = {
 				Body: req.files.sound.data,
@@ -154,16 +166,9 @@ async function handleSoundUpload(req, res, next) {
 	}
 }
 
-async function deleteAWSObject(key) {
-	const bucketParams = {
-		Bucket: process.env.AWS_BUCKET_NAME,
-		Key: key,
-	};
-	await s3Client.send(new DeleteObjectCommand(bucketParams));
-}
-
-function generateFileName(name) {
+function generateFileName(soundBoardId, categoryId, name) {
 	const myFile = name.split(".");
 	const fileType = myFile[myFile.length - 1];
-	return v4() + "." + fileType;
+	const rand = v4() + "." + fileType;
+	return `${soundBoardId}/${categoryId}/${rand}`;
 }
