@@ -38,7 +38,7 @@ exports.create = async (req, res, next) => {
 			board_id: req.params.soundBoardId,
 		});
 		req.flash("success", "Saved!");
-		res.redirect("back");
+		res.redirect(`/home?board=${req.params.soundBoardId}`);
 	} catch (err) {
 		next(err);
 	}
@@ -58,11 +58,6 @@ exports.destroy = (req, res, next) => {
 						msg: "Unable to remove from sound board.",
 					},
 				]);
-			else
-				req.flash(
-					"success",
-					"Successfully removed from your saved boards."
-				);
 			res.redirect("back");
 		})
 		.catch(next);

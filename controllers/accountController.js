@@ -57,7 +57,8 @@ exports.getChangePasswordPage = async (req, res, next) => {
 				password: decoded.password,
 			},
 		});
-		if (!user) return res.status(404).send();
+		if (!user)
+			return res.status(404).send("Token is expired or user not found");
 		res.render("changePassword", {
 			email_address: decoded.email,
 			token: req.params.token,

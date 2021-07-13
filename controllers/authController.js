@@ -29,14 +29,14 @@ exports.signin = [
 	(req, res, next) => {
 		User.findByPk(req.user.user_id)
 			.then((user) => {
-				if (!user) throw new Error();
+				if (!user) return res.send("User not found");
 				if (!user.verified_at) {
 					req.flash("errors", [
 						{
-							msg: `Your email address is not verified. Click the link on the email that we've sent to you to verify your email or click resend verification email located below.`,
+							msg: `Your email address is not verified. Check your email for the verification email or click resend below.`,
 						},
 					]);
-					return res.redirect("back");
+					return res.redirect("/auth/signin");
 				}
 				res.redirect("/home");
 			})

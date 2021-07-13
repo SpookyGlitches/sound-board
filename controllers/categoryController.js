@@ -1,14 +1,9 @@
+const { deleteObjects } = require("../helpers/s3");
 const db = require("../models/db");
 
 const SoundBoard = db.boards;
 const Category = db.categories;
 const Sound = db.sounds;
-
-const { s3Client } = require("../config/s3Client.js"); // Helper function that creates Amazon S3 service client module.
-const {
-	DeleteObjectsCommand,
-	ListObjectsCommand,
-} = require("@aws-sdk/client-s3");
 
 exports.create = async (req, res, next) => {
 	try {
@@ -102,17 +97,8 @@ exports.update = (req, res, next) => {
 };
 
 exports.destroy = async (req, res, next) => {
+	const t = await db.sequelize.transaction();
 	try {
-		let bucketParams = {
-			Bucket: process.env.AWS_BUCKET_NAME,
-			Key: `${req.params.soundBoardId}/${req.params.categoryId}/`,
-		};
-		const { Contents } = await s3Client.send(
-			new ListObjectsCommand(bucketParams)
-		);
-		bucketParams.Delete = { Objects: Contents };
-		delete bucketParams.Key;
-		await s3Client.send(new DeleteObjectsCommand(bucketParams));
 		await Category.destroy({
 			where: {
 				category_id: req.params.categoryId,
@@ -127,9 +113,15 @@ exports.destroy = async (req, res, next) => {
 					},
 				},
 			],
+			transaction: t,
 		});
+		await deleteObjects(
+			`${req.params.soundBoardId}/${req.params.categoryId}/`
+		);
+		await t.commit();
 		res.redirect(`/home?board=${req.params.soundBoardId}`);
 	} catch (err) {
+		await t.rollback();
 		next(err);
 	}
 };

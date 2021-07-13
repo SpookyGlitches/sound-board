@@ -4,6 +4,7 @@ const {
 } = require("@aws-sdk/client-s3");
 const { Op } = require("sequelize");
 const { s3Client } = require("../config/s3Client");
+const { deleteObjects } = require("../helpers/s3");
 
 const db = require("../models/db");
 
@@ -133,16 +134,7 @@ exports.destroy = async (req, res, next) => {
 				user_id: req.user.user_id,
 			},
 		});
-		let bucketParams = {
-			Bucket: process.env.AWS_BUCKET_NAME,
-			Key: `${req.params.soundBoardId}/${req.params.categoryId}/`,
-		};
-		const { Contents } = await s3Client.send(
-			new ListObjectsCommand(bucketParams)
-		);
-		delete bucketParams.Key;
-		bucketParams.Delete = { Objects: Contents };
-		await s3Client.send(new DeleteObjectsCommand(bucketParams));
+		await deleteObjects(`${req.params.soundBoardId}/`);
 		res.redirect("/home");
 	} catch (err) {
 		next(err);

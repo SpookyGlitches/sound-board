@@ -12,7 +12,9 @@ function sendEmail(user, action, route) {
 		html: body,
 	};
 	return new Promise((resolve, reject) => {
-		mailgun.messages().send(data, async (error, body) => {
+		mailgun.messages().send(data, (error, body) => {
+			console.log(error);
+			console.log(body);
 			if (error) reject(error);
 			else resolve(body);
 		});

@@ -40,6 +40,7 @@ async function fetchSavedBoards() {
 			createSvboardLink(svboards);
 		}
 	} catch (err) {
+		alert("Error in retrieving saved sound boards");
 		console.log(err);
 	}
 }

@@ -1,12 +1,7 @@
 require("dotenv/config");
 
 const { v4: uuidv4, v4 } = require("uuid");
-const { s3Client } = require("../config/s3Client.js"); // Helper function that creates Amazon S3 service client module.
-const {
-	PutObjectCommand,
-	GetObjectCommand,
-	DeleteObjectCommand,
-} = require("@aws-sdk/client-s3");
+const { uploadObject, deleteObject, getObject } = require("../helpers/s3");
 const db = require("../models/db");
 const Sound = db.sounds;
 const SoundBoard = db.boards;
@@ -31,12 +26,8 @@ exports.create = [
 ];
 
 exports.play = async (req, res, next) => {
-	const downloadParams = {
-		Key: req.query.key,
-		Bucket: process.env.AWS_BUCKET_NAME,
-	};
 	try {
-		let data = await s3Client.send(new GetObjectCommand(downloadParams));
+		const data = await getObject(req.query.key);
 		data.Body.pipe(res);
 	} catch (err) {
 		next(err);
@@ -93,14 +84,12 @@ exports.destroy = [
 				},
 			});
 			if (!sound) return res.status(404).send();
-			const bucketParams = {
-				Bucket: process.env.AWS_BUCKET_NAME,
-				Key: key,
-			};
-			await s3Client.send(new DeleteObjectCommand(bucketParams));
+			await deleteObject(sound.file);
 			await sound.destroy();
 			req.flash("success", "Successfully deleted.");
-			res.redirect("back");
+			res.redirect(
+				`/soundboards/${req.params.soundBoardId}/categories/${req.params.categoryId}`
+			);
 		} catch (err) {
 			next(err);
 		}
@@ -136,7 +125,7 @@ async function handleSoundUpload(req, res, next) {
 				//delete previous file since this is an edit
 				const sound = await Sound.findByPk(req.params.soundId);
 				if (!sound) return res.status(404).send();
-				await deleteAWSObject(sound.file);
+				await deleteObject(sound.file);
 				fileName = sound.file;
 			} else {
 				fileName = generateFileName(
@@ -145,12 +134,7 @@ async function handleSoundUpload(req, res, next) {
 					req.files.sound.name
 				);
 			}
-			const uploadParams = {
-				Body: req.files.sound.data,
-				Bucket: process.env.AWS_BUCKET_NAME,
-				Key: fileName,
-			};
-			await s3Client.send(new PutObjectCommand(uploadParams));
+			await uploadObject(req.files.sound.data, fileName);
 			req.body.sound = fileName;
 			next();
 		} catch (err) {
