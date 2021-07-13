@@ -1,6 +1,7 @@
 let form = document.getElementById("createSoundBoardForm");
 let tagsFld = document.getElementById("tagsField");
 let tagsContainer = document.getElementById("tagsContainer");
+let deleteForm = document.getElementById("deleteSboard");
 let tags = [];
 
 populateTags();
@@ -11,6 +12,19 @@ function populateTags() {
 		const element = existingTags[index];
 		element.addEventListener("click", deleteTag);
 		tags.push(element.textContent);
+	}
+}
+
+if (deleteForm) {
+	deleteForm.addEventListener("submit", confirmDelete);
+}
+
+function confirmDelete(event) {
+	event.preventDefault();
+	if (!confirm("Are you sure you want to delete this?")) {
+		return false;
+	} else {
+		this.submit();
 	}
 }
 
@@ -42,8 +56,13 @@ function deleteTag(event) {
 	event.target.remove();
 }
 
-function onFormSubmit() {
+document
+	.getElementById("createSoundBoardForm")
+	.addEventListener("submit", onFormSubmit);
+
+function onFormSubmit(event) {
 	if (tags.length <= 0) {
+		event.preventDefault();
 		alert("Tags must not be empty");
 		return false;
 	}

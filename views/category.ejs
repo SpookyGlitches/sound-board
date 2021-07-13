@@ -39,11 +39,11 @@
                             Add sound
                         </button>
                     </div>
-                    <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/delete" method="post" onsubmit="return confirm('This category and its asssociated sounds will be deleted. Proceed? ')">
-                        <button type="submit" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal"
-                        data-bs-target="#deleteCategoryModal">
-                        Delete
-                    </button>            
+                    <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/delete" class="delete" method="post">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button type="submit" class="btn btn-sm btn-outline-dark">
+                            Delete
+                        </button>            
                     </form>
                 </div>            
             <% } %>
@@ -53,7 +53,7 @@
                     <div class="col-sm-4 mb-4">
                         <div class="card rounded ">
                             <div class="card-body text-center">
-                                <div class="sound" style="cursor:pointer;" data-src="<%= sounds[index].file %> ">
+                                <div class="sound cursor-pointer" data-src="<%= sounds[index].file %>" data-category="<%= sboard.categories[0].category_id %>" data-sboard="<%= sboard.board_id %> ">
                                     <h6 class="fw-bold text-center">
                                         <%= sounds[index].label %> 
                                     </h6>
@@ -65,7 +65,8 @@
                                 </div>
                                 <% if (isOp) { %>
                                     <div class='d-flex gap-2 justify-content-center'>
-                                        <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/sounds/<%= sounds[index].sound_id %>/delete" method="post" onsubmit="return confirm('Delete this sound?')">
+                                        <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/sounds/<%= sounds[index].sound_id %>/delete" method="post" class="delete" >
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                             <button data-soundid="<%= sounds[index].sound_id %>"  class='btn btn-sm btn-light' type="submit" > 
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                                                     <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
@@ -94,6 +95,7 @@
               </div>
               <div class="modal-body">
                 <form action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/update" method="post">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <div class="mb-3">
                         <label for="" class="form-label fw-bold">
                             Name
@@ -125,6 +127,7 @@
                </div>
                <div class="modal-body">
                     <form data-sboardid="<%= sboard.board_id %>" data-catid='<%= sboard.categories[0].category_id %>' action="/soundboards/<%= sboard.board_id %>/categories/<%= sboard.categories[0].category_id %>/sounds/create"  method="post" id="form" enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <div class="mb-3">
                             <label for="label" class="form-label fw-bold">Label</label>
                             <input type="text" value="" id="sound-label" name="label" class="form-control form-control-sm" id="" placeholder="" maxlength="64" value="" required>

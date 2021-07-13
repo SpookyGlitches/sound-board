@@ -11,8 +11,8 @@
 <body>
     <%- include('./partials/navbar.ejs',{active:"profile"}) %>
         <div class="container py-4 mt-5 d-flex justify-content-center align-items-center">
-            <div style="min-width: 25rem;">
-                <form action="/profile/update/name" method="post">
+            <div class="mw-25rem">
+                <form action="/account" method="post">
                     <h1 class="fw-bolder mb-4">Account</h1>
                     <%- include('./partials/error.ejs') %>
                     <%- include('./partials/success.ejs') %>
@@ -29,6 +29,7 @@
                             data-bs-target="#changePasswordModal" type="button">Change password</button>
                         <button class="btn btn-sm btn-dark" type="submit">Edit name</button>
                     </div>
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 </form>
             </div>
             <div class="modal fade" id="changePasswordModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
@@ -39,7 +40,7 @@
                             <h3 class="modal-title fw-bolder" id="">Change password</h3>
                         </div>
                         <div class="modal-body">
-                            <form action="/profile/update/password" method="post">
+                            <form action="/account/password" method="post">
                                 <div class="mb-3">
                                     <label for="oldPassword" class="form-label fw-bold" >Old
                                         password</label>
@@ -61,6 +62,8 @@
                                     </button>
                                     <input class="btn btn-dark btn-sm" type="submit" value="Change" />
                                 </div>
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
                             </form>
                         </div>
                     </div>

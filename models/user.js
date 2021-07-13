@@ -21,14 +21,9 @@ module.exports = function (sequelize, DataTypes) {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			status: {
-				type: DataTypes.ENUM("ACTIVE", "INACTIVE"),
-				defaultValue: "INACTIVE",
-				allowNull: false,
-			},
-			token: {
-				type: DataTypes.STRING,
-				allowNull: false,
+			verified_at: {
+				type: DataTypes.DATE,
+				allowNull: true,
 			},
 		},
 		{

@@ -1,8 +1,8 @@
+const { deleteObjects } = require("../helpers/s3");
 const db = require("../models/db");
 
 const SoundBoard = db.boards;
 const Category = db.categories;
-const User = db.users;
 const Sound = db.sounds;
 
 exports.create = async (req, res, next) => {
@@ -57,12 +57,15 @@ exports.index = (req, res, next) => {
 			res.render("category", {
 				sboard: sboard,
 				isOp: sboard.user_id == req.user.user_id,
+				csrfToken: req.csrfToken(),
 			});
 		})
 		.catch(next);
 };
 
 exports.update = (req, res, next) => {
+	const sboardId = req.params.soundBoardId;
+	const catId = req.params.categoryId;
 	Category.update(
 		{
 			name: req.body.name,
@@ -70,14 +73,14 @@ exports.update = (req, res, next) => {
 		},
 		{
 			where: {
-				board_id: req.params.soundBoardId,
-				category_id: req.params.categoryId,
+				board_id: sboardId,
+				category_id: catId,
 			},
 			include: [
 				{
 					model: SoundBoard,
 					where: {
-						board_id: req.params.soundBoardId,
+						board_id: sboardId,
 						user_id: req.user.user_id,
 					},
 				},
@@ -88,32 +91,37 @@ exports.update = (req, res, next) => {
 			if (!sboard) {
 				return res.status(404).send("Cannot find category to update.");
 			}
-			res.redirect("back");
+			res.redirect(`/soundboards/${sboardId}/categories/${catId}`);
 		})
 		.catch(next);
 };
 
-exports.destroy = (req, res, next) => {
-	Category.destroy({
-		where: {
-			category_id: req.params.categoryId,
-			board_id: req.params.soundBoardId,
-		},
-		include: [
-			{
-				model: SoundBoard,
-				where: {
-					board_id: req.params.soundBoardId,
-					user_id: req.user.user_id,
-				},
+exports.destroy = async (req, res, next) => {
+	const t = await db.sequelize.transaction();
+	try {
+		await Category.destroy({
+			where: {
+				category_id: req.params.categoryId,
+				board_id: req.params.soundBoardId,
 			},
-		],
-	})
-		.then((category) => {
-			if (!category) {
-				return res.status(404).send("Category not found");
-			}
-			res.redirect(`/home?board=${req.params.soundBoardId}`);
-		})
-		.catch(next);
+			include: [
+				{
+					model: SoundBoard,
+					where: {
+						board_id: req.params.soundBoardId,
+						user_id: req.user.user_id,
+					},
+				},
+			],
+			transaction: t,
+		});
+		await deleteObjects(
+			`${req.params.soundBoardId}/${req.params.categoryId}/`
+		);
+		await t.commit();
+		res.redirect(`/home?board=${req.params.soundBoardId}`);
+	} catch (err) {
+		await t.rollback();
+		next(err);
+	}
 };

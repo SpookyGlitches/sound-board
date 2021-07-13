@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <style>
+        .w-20rem{
+            width:20rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row min-vh-100">
+            <div class="col-md  bg-dark d-flex align-items-center justify-content-center">
+                <%- include("./partials/intro") %>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <div class="w-20rem" >
+                    <form action="<%= route %>" method="post">
+                        <h2 class="fw-bolder mb-4"><%= title%> </h2>
+                        <div class="mt-4">
+                            <%- include("./partials/error.ejs")%>
+                            <%- include("./partials/success.ejs")%>
+                        </div>
+                        <input type="text" name="email_address" class="form-control form-control-sm" value="" id="" required>
+                        <div class="form-text mb-3">
+                            Enter your email address so we can assist you.
+                        </div>
+                        <button type="submit" id="" class="btn btn-dark btn-sm w-100 ">
+                            Submit
+                        </button>
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<%- include('./partials/cdn') -%>
+</html>

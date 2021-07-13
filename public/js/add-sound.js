@@ -2,15 +2,11 @@ document.getElementById("file").addEventListener("change", validateFile);
 
 function validateFile(event) {
 	//theres probably a bug here
-	const extensions = [".mp3", ".ogg", ".wav"];
+	const extensions = [".mp3", ".ogg", ".wav", ".m4a"];
 	let btn = document.getElementById("submit");
 	btn.disabled = true;
 	if (!hasExtension(extensions, event.target)) {
-		alert(
-			"Supported file extensions are " +
-				extensions.toString() +
-				" ."
-		);
+		alert("Supported file extensions are " + extensions.toString() + " .");
 		return;
 	}
 	let reader = new FileReader();
@@ -19,9 +15,7 @@ function validateFile(event) {
 		audio.src = e.currentTarget.result;
 		audio.addEventListener("durationchange", function (e) {
 			if (audio.duration > 30) {
-				alert(
-					"Only sound clips of <= 30 seconds are allowed."
-				);
+				alert("Only sound clips of <= 30 seconds are allowed.");
 				return;
 			}
 			btn.disabled = false;

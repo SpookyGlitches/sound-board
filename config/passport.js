@@ -1,6 +1,6 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const bcrypt = require("bcrypt");
+const { compare } = require("bcrypt");
 
 const User = require("../models/db").users;
 
@@ -17,21 +17,18 @@ passport.use(
 					email_address: email,
 				},
 			});
-			if (!user) {
-				return done(null, false, {
-					message: "No account associated with that email address",
-				});
+			let result = false;
+			if (user) {
+				result = await compare(password, user.password);
 			}
-			const result = bcrypt.compareSync(
-				password,
-				user.password
-			);
-			if (result == false) {
+			if (!result) {
 				return done(null, false, {
-					message: "Incorrect password.",
+					message:
+						"No account associated with that email address or the password is incorrect.",
 				});
+			} else {
+				return done(null, user);
 			}
-			return done(null, user);
 		} catch (err) {
 			done(err);
 		}

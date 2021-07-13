@@ -13,7 +13,7 @@
                 <%- include("./partials/intro") %>
             </div>
             <div class="col d-flex justify-content-center align-items-center">
-                <div class="" style="width:20rem;">
+                <div class="w-20rem">
                     <h1 class="fw-bolder">Sign in</h1>
                     <p>It's nice to see you here.</p>
                     <div class="mt-4">
@@ -24,6 +24,7 @@
                         <% }else{ %>
                             <%- include("./partials/error.ejs")%>
                         <% } %>
+                        <% include("./partials/success.ejs") %> 
                         <form action="/auth/signin" method="post">
                             <div class="mb-3">
                                 <label for="email" class="form-label fw-bold">Email addresss</label>
@@ -40,10 +41,14 @@
                             <div class="d-grid mb-3">
                                 <button class="btn btn-dark btn-sm" type="submit">Sign in</button>
                             </div>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         </form>
                         <div class="b-4 d-flex flex-column justify-content-center align-items-center">
                             <small>
-                                <a href="" >Forgot password?</a>
+                                <a href="/account/reset-password" >Forgot password?</a>
+                            </small>
+                            <small>
+                                <a href="/account/verify/resend">Resend verification email</a>
                             </small>
                             <small>
                                 <a href="/auth/signup">Sign up</a>

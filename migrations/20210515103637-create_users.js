@@ -22,17 +22,9 @@ module.exports = {
 				type: Sequelize.DataTypes.STRING,
 				allowNull: false,
 			},
-			status: {
-				type: Sequelize.DataTypes.ENUM(
-					"ACTIVE",
-					"INACTIVE"
-				),
-				defaultValue: "INACTIVE",
-				allowNull: false,
-			},
-			token: {
-				type: Sequelize.DataTypes.STRING,
-				allowNull: false,
+			verified_at: {
+				type: Sequelize.DataTypes.DATE,
+				allowNull: true,
 			},
 			created_at: {
 				type: Sequelize.DataTypes.DATE,

@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" style="height:100%">
+<html lang="en" class="h-100">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    
 </head>
 <body class="h-100">
     <%- include('./partials/navbar.ejs',{active:"home"}) %>
@@ -40,12 +39,14 @@
                                             <button type="submit" class="btn btn-dark btn-sm d-flex align-items-center">
                                                 Save to my boards
                                             </button>
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                         </form>
                                     <% }else{ %>
                                         <form action="/savedboards/delete/<%= sboard.board_id %>" method="post">
                                             <button type="submit" class="btn btn-dark btn-sm d-flex align-items-center">
                                                 Remove
                                             </button>
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                         </form>      
                                     <% } %>
                                 <% }else{%>
@@ -70,7 +71,7 @@
                                         </h5>
                                         <div class="d-flex  flex-wrap justify-content-center gap-1  ">
                                             <% for( let y = 0; y < sboard.categories[x].sounds.length; y++ ) { %>
-                                                <button class='mb-1 btn bg-light sound btn-sm text-break'  data-src="<%= sboard.categories[x].sounds[y].file %> ">
+                                                <button class='mb-1 btn bg-light sound btn-sm text-break' data-sound="<%= sboard.categories[x].sounds[y].sound_id %>" data-src="<%= sboard.categories[x].sounds[y].file %>" data-category="<%= sboard.categories[x].category_id %>" data-sboard="<%= sboard.board_id %>">
                                                     <%= sboard.categories[x].sounds[y].label %>
                                                 </button>
                                             <% } %>
@@ -118,8 +119,9 @@
                                         Close
                                     </button>
                                     <input class="btn btn-dark btn-sm" type="submit" value="Create" />
-                                </div>
+                                </div>                                
                             </div>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         </form>
                     </div>
                 </div>
@@ -143,8 +145,9 @@
                                   <div class="d-flex align-items-center justify-content-between">
                                       <p class='m-0 text-break'><%= sboard.comments[index].content %> </p>
                                       <% if (user_id == sboard.comments[index].user_id && ! sboard.comments[index].deleted_at) { %>
-                                        <form action="/soundboards/<%= sboard.board_id %>/comments/<%= sboard.comments[index].comment_id %>/delete" class="d-flex justify-content-end" onsubmit="return confirm('Delete this comment?');" method="post">
+                                        <form action="/soundboards/<%= sboard.board_id %>/comments/<%= sboard.comments[index].comment_id %>/delete" class="d-flex justify-content-end delete-comment"  method="post">
                                             <input type="submit" class="btn-sm btn btn-light" value="Delete">
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                         </form>
                                       <% } %>
                                   </div>
@@ -159,6 +162,7 @@
                                 <div class="d-flex flex-row-reverse">
                                     <button class="btn btn-sm mt-2 btn-dark" id='commentBtn' type="submit">Comment</button>
                                 </div>
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                             </form>  
                           </div>
                       </div>

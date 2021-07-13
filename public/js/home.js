@@ -1,15 +1,28 @@
 let svboards;
 fetchSavedBoards();
 
+let userComments = document.getElementsByClassName("delete-comment");
+
+for (x = 0; x < userComments.length; x++) {
+	userComments[x].addEventListener("submit", deleteComment);
+}
+
+function deleteComment(event) {
+	event.preventDefault();
+	if (!confirm("Are you sure you want to delete this comment?")) {
+		return false;
+	} else {
+		this.submit();
+	}
+}
+
 document.getElementById("search").addEventListener("keyup", (event) => {
 	if (event.currentTarget.value.length != 0) {
 		let result = svboards.filter((e) => {
 			console.log(e);
 			return e.board.name
 				.toLowerCase()
-				.includes(
-					event.currentTarget.value.toLowerCase()
-				);
+				.includes(event.currentTarget.value.toLowerCase());
 		});
 		createSvboardLink(result);
 	} else {
@@ -27,6 +40,7 @@ async function fetchSavedBoards() {
 			createSvboardLink(svboards);
 		}
 	} catch (err) {
+		alert("Error in retrieving saved sound boards");
 		console.log(err);
 	}
 }
