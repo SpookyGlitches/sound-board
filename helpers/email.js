@@ -13,8 +13,6 @@ function sendEmail(user, action, route) {
 	};
 	return new Promise((resolve, reject) => {
 		mailgun.messages().send(data, (error, body) => {
-			console.log(error);
-			console.log(body);
 			if (error) reject(error);
 			else resolve(body);
 		});
@@ -27,7 +25,7 @@ function getEmailContent(display_name, action, route) {
 	route =
 		process.env.NODE_ENV == "development"
 			? `http://localhost:${process.env.PORT}` + route
-			: `https://${process.env.DOMAIN_NAME}`;
+			: `https://${process.env.DOMAIN_NAME}` + route;
 	switch (action) {
 		case "VERIFY_EMAIL":
 			obj.subject = "Verify your email";

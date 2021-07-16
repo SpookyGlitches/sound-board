@@ -40,6 +40,7 @@ passport.serializeUser(function (user, done) {
 		user_id: user.user_id,
 		display_name: user.display_name,
 		email_address: user.email_address,
+		verified_at: user.verified_at,
 	});
 });
 
